@@ -26,11 +26,12 @@ The landing page is `app/routes/home.tsx`.
 
 ## Deploy
 
-[Cloudflare Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) (the Cloudflare GitHub app,
-connected to this repository on the `yukibana-website` Worker) builds every push with `pnpm build` and deploys it with
-`npx wrangler deploy`. A push to `main` goes live at `yukibana.dev` and `www.yukibana.dev` (the custom domains in
-`wrangler.jsonc`), and a push to any other branch is uploaded as a preview version with its own `workers.dev` URL.
+CI (`.github/workflows/ci.yml`, GitHub Actions) checks and builds every change. A push to `main` deploys with
+`wrangler deploy`, which also keeps the custom domains `yukibana.dev` and `www.yukibana.dev` attached
+(`wrangler.jsonc`). A pull request from a branch of this repository is uploaded as a preview at
+`pr-<n>-yukibana-website.<subdomain>.workers.dev`.
 
-GitHub Actions (`.github/workflows/ci.yml`) only checks: format, lint, typecheck and build.
+The repository needs one Actions secret, `CLOUDFLARE_API_TOKEN`: a Cloudflare API token with Account > Workers
+Scripts: Edit, and Zone > Workers Routes: Edit on `yukibana.dev`. The account ID is in `wrangler.jsonc`.
 
 By hand: `pnpm run deploy` (after `pnpm exec wrangler login`).

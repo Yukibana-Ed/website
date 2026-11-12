@@ -4,6 +4,8 @@
   // prerenders every route into build/client and the Worker only serves those
   // files, so there is no `main` and no code runs per request.
   "name": "yukibana-website",
+  // The Cloudflare account that also hosts yukibana-cloud, so CI only needs a token.
+  "account_id": "2ee7a3e4d6b972846f17c2a93a7c85a8",
   "compatibility_date": "2026-09-01",
   "assets": {
     "directory": "./build/client",

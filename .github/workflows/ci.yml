@@ -1,6 +1,10 @@
-# Checks and builds every change. Deploys are not done here: Cloudflare Workers Builds
-# (the Cloudflare GitHub app) builds and deploys main to https://yukibana.dev, and uploads
-# a preview version for every other branch.
+# Checks every change, and ships it: a push to main deploys https://yukibana.dev,
+# and a pull request from a branch of this repository gets a preview at
+# pr-<n>-yukibana-website.<subdomain>.workers.dev.
+#
+# Needs one Actions secret, CLOUDFLARE_API_TOKEN: a token with Account > Workers Scripts: Edit,
+# and Zone > Workers Routes: Edit on yukibana.dev (for the custom domains). The account ID
+# is in wrangler.jsonc.
 name: CI
 
 on:
@@ -34,3 +38,61 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: build/client
+          retention-days: 7
+
+  deploy:
+    name: Deploy
+    needs: check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment:
+      name: production
+      url: https://yukibana.dev
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: build/client
+      - run: pnpm exec wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+  preview:
+    name: Preview
+    needs: check
+    # Forks get no secrets, so only branches of this repository are previewed.
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: build/client
+      - name: Upload the preview
+        run: pnpm exec wrangler versions upload --preview-alias "pr-${{ github.event.pull_request.number }}"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
