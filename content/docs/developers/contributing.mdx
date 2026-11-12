@@ -1,0 +1,57 @@
+---
+title: Contributing
+description: Build Yukibana from source and run its tests.
+---
+
+Yukibana is open source and welcomes contributions. The full guide is
+[CONTRIBUTING.md](https://github.com/Yukibana-Ed/Yukibana/blob/main/CONTRIBUTING.md)
+in the repository.
+
+## Prerequisites
+
+- [pnpm](https://pnpm.io/installation), which runs every script on the Node.js 24
+  release the repository names, and downloads it itself;
+- Python 3;
+- the platform tools [Theia needs](https://github.com/eclipse-theia/theia/blob/master/doc/Developing.md#prerequisites).
+  On Windows, the Visual Studio Build Tools with the Spectre-mitigated MSVC
+  libraries.
+
+## Build and run the IDE
+
+```bash
+git clone https://github.com/Yukibana-Ed/Yukibana.git
+cd Yukibana
+pnpm setup:ide
+pnpm -C ide start            # Electron; `pnpm -C ide start browser` for the browser app
+```
+
+The first start downloads the bundled plugins, which takes a while.
+`pnpm setup:cloud` and `pnpm setup:cli` install only what the cloud or the CLI
+needs, and `pnpm install` installs everything.
+
+## Checks
+
+| | |
+| --- | --- |
+| `pnpm lint` | oxlint, every package. |
+| `pnpm typecheck` | TypeScript, every package. |
+| `pnpm format:check` | oxfmt. |
+| `pnpm test` | Vitest unit tests. |
+| `pnpm -C ide test:e2e` | Playwright end-to-end tests of both apps. |
+
+## The cloud locally
+
+The cloud has a devcontainer with the whole stack (Supabase, an S3 bucket, the
+app). See
+[docs/cloud/README.md](https://github.com/Yukibana-Ed/Yukibana/blob/main/docs/cloud/README.md).
+
+## This website
+
+```bash
+git clone https://github.com/Yukibana-Ed/website.git
+cd website
+pnpm install
+pnpm dev
+```
+
+Pages are MDX files in `content/docs`. Every page has an **Edit on GitHub** link.

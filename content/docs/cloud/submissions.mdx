@@ -1,0 +1,67 @@
+---
+title: Submissions and grading
+description: Collecting students' work, and assembling it for grading.
+---
+
+## Submissions
+
+A submission is a `.tar.gz` of the student's project folder, sent from the IDE,
+from `yukibana submit`, or uploaded on the project's web page. The cloud
+computes its size and SHA-256 itself, stamps the time, and records the release
+the student's starter came from.
+
+- Every version is kept, and the **newest** is the one that counts.
+- Submissions are append-only: none can be changed or deleted.
+- A submission after the deadline is accepted and listed as **late**.
+
+Staff see each student's submissions on the project page and can download them
+there, one by one or assembled.
+
+## Downloading
+
+```bash
+yukibana login --url https://cloud.yukibana.dev
+yukibana submissions <project-id> --latest
+yukibana download <project-id> --out grading --assemble
+```
+
+`download` unpacks each student's newest submission into
+`grading/<student name>/`, verifying every archive against the SHA-256 recorded
+when it arrived. Folder names are safe on every operating system, and two
+students with the same name are told apart by their GitHub login. A
+`yukibana-download.json` next to the folders records whose folder is whose, the
+submission's id, time, checksum and lateness, and what the assembly found.
+
+| Option | |
+| --- | --- |
+| `--all-versions` | Every version, into `<student name>/<time>/`. |
+| `--submission <id>` | Only the named submissions. |
+| `--student-submissions <who>` | Only some students: by name, GitHub login, address or id. Repeatable. |
+| `--assemble` | Assemble each submission (below). |
+| `--release <id or newest>` | With `--assemble`: which release to assemble with. |
+| `--archive` | Also keep each `.tar.gz` as sent. |
+
+## Assembly
+
+What a teacher grades is an **assembly**: the student's files, except that
+`yukibana.json` and every `readOnly` and `hidden` path are taken from the teacher
+archive of a release. By default that is the release the student started from;
+`--release newest` uses the newest for everyone, so a fixed hidden test reaches
+every submission.
+
+The assembly reports, per student:
+
+- **modified**: a read-only file whose content differs from the starter's;
+- **deleted**: a read-only file the starter had and the submission does not;
+- **added**: a file under a read-only or hidden path that the teacher's project
+  does not have, such as a test written into the hidden folder.
+
+Each is undone in the assembled folder. Changes are always measured against the
+release the student started from, so a read-only file fixed in a later release
+is not reported as theirs.
+
+To assemble files you already have:
+
+```bash
+yukibana assemble <submission.tar.gz> --teacher <teacher archive or folder> --out <dir>
+```

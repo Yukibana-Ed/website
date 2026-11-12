@@ -1,0 +1,43 @@
+---
+title: Submitting
+description: How the IDE prepares, previews and sends a student's work.
+---
+
+The **Submit** button sends the project to wherever the exercise says, after
+showing the student exactly what will leave their machine.
+
+## What is sent
+
+A submission is a `.tar.gz` of the project folder, built by the same library
+function the CLI's `yukibana submit` uses, so both always send the same files:
+
+- `yukibana.json`, always;
+- every file, except:
+  - `.git/` and `.theia/`;
+  - `node_modules/` at any depth, and the build output of the project's kind
+    (`target/`, `project/target/`, `.bsp`, `.metals`, …);
+  - what the project's `.gitignore` files ignore, unless
+    `submission.respectGitignore` is `false`;
+  - what `submission.exclude` matches, and, when `submission.include` is set,
+    anything it does not match.
+
+A submission that is too large (by default above 32 MiB) or that holds a
+symbolic link pointing out of the project is refused before anything is sent.
+
+## Where it goes
+
+`submission.target` chooses the destination:
+
+| Value | |
+| --- | --- |
+| `cloud` (default) | The [Yukibana Cloud](/docs/cloud) registry. The project id in the starter's `yukibana.json` says which exercise it belongs to. The student logs in through their browser the first time. |
+| `file` | An archive the student saves, for a course that collects work some other way (by email, on Moodle, …). |
+
+Submission targets are pluggable inside the IDE, so other destinations, such as
+a learning management system, can be added as extensions.
+
+## After sending
+
+The cloud answers with the submission's id, size and SHA-256, and the IDE
+confirms it. Every submission is kept; the newest counts. A submission after
+the deadline is accepted and marked late.

@@ -1,0 +1,26 @@
+{
+  "title": "Yukibana",
+  "pages": [
+    "---Introduction---",
+    "index",
+    "why",
+    "vision",
+    "---Get started---",
+    "getting-started/install",
+    "getting-started/students",
+    "getting-started/teachers",
+    "---Guides---",
+    "ide",
+    "cloud",
+    "light",
+    "---Reference---",
+    "reference/yukibana-json",
+    "reference/cli",
+    "reference/github-action",
+    "reference/http-api",
+    "---Developers---",
+    "developers/integrating",
+    "developers/architecture",
+    "developers/contributing"
+  ]
+}

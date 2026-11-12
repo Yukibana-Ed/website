@@ -1,0 +1,56 @@
+---
+title: What is Yukibana?
+description: An IDE for education, and the cloud that hands out course projects and collects what students submit.
+---
+
+Yukibana is a code editor built for teaching programming. A teacher decides,
+exercise by exercise, which tools a student sees (code suggestions, error
+underlines, AI assistance, the file explorer), so a course can start from a
+plain editor with a run button and open up the full IDE as students progress.
+
+Around the editor, **Yukibana Cloud** distributes course projects and collects
+the work students hand in. A teacher publishes an exercise from a Git
+repository; students open it in the IDE with one click, write their solution
+and submit it from the toolbar; staff download every submission with the hidden
+tests put back and any tampered file reported.
+
+<Cards>
+  <Card title="Why Yukibana?" href="/docs/why">
+    The problems with teaching on a professional IDE, and what Yukibana does about them.
+  </Card>
+  <Card title="Install the IDE" href="/docs/getting-started/install">
+    Installers for Windows, macOS and Linux.
+  </Card>
+  <Card title="For students" href="/docs/getting-started/students">
+    Open an exercise, work on it, submit it.
+  </Card>
+  <Card title="For teachers" href="/docs/getting-started/teachers">
+    Turn a course repository into an exercise and collect the submissions.
+  </Card>
+</Cards>
+
+## The pieces
+
+| | |
+| --- | --- |
+| **[Yukibana IDE](/docs/ide)** | A desktop (and browser) IDE built on [Eclipse Theia](https://theia-ide.org/). It runs VS Code extensions, so real language servers, build tools and test frameworks work as they do in VS Code. What a student sees is set per project by a [`yukibana.json`](/docs/reference/yukibana-json) file. |
+| **[Yukibana Cloud](/docs/cloud)** | The registry at [cloud.yukibana.dev](https://cloud.yukibana.dev): courses, editions, rosters, projects, releases and submissions. |
+| **[The `yukibana` CLI](/docs/reference/cli)** | Builds and publishes releases from a course repository, and downloads and assembles submissions for grading. Students can use it to fetch starters and submit, too. |
+| **[The GitHub Action](/docs/reference/github-action)** | Publishes a release from the course repository's own CI on every push. |
+| **[Yukibana Light](/docs/light)** | A lightweight, in-browser companion at [light.yukibana.dev](https://light.yukibana.dev). |
+
+## Status
+
+Yukibana is young. It is developed in the open at the
+[School of Engineering of HES-SO Valais/Wallis](https://www.hevs.ch/), in its
+Informatique et systèmes de communication (ISC) programme, and the first
+classroom trials are planned for the spring semester. The
+[current release](https://github.com/Yukibana-Ed/Yukibana/releases/latest) is
+meant to gather feedback from teachers and to test the IDE on every platform.
+See the [vision and roadmap](/docs/vision) for where it is going.
+
+<Callout title="We want your feedback">
+  Teaching programming and wondering whether Yukibana fits your course? Tell us
+  what you would need, or what would keep you from adopting it, in an
+  [issue on GitHub](https://github.com/Yukibana-Ed/Yukibana/issues).
+</Callout>

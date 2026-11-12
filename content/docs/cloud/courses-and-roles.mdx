@@ -1,0 +1,74 @@
+---
+title: Courses and roles
+description: Courses, editions, projects, and who can do what.
+---
+
+## The model
+
+**Course → edition → project → submission.**
+
+- A **course** is a code that groups its editions.
+- An **edition** is one run of the course, a semester or a year. It carries the
+  course's name as it ran then, its roster, and its projects. A new edition is
+  a **copy** of the previous one: projects and staff come along, students and
+  dates do not.
+- A **project** is one exercise in an edition, with its releases and its dates.
+  Staff order an edition's projects by dragging them.
+- A **submission** is one version of a student's work on a project.
+
+Reusing an assignment next year means duplicating the edition rather than
+sharing the project, so each year's staff only ever see their own projects,
+hidden-test configuration included.
+
+## Roles
+
+There are two kinds of role.
+
+**Platform roles**, per account:
+
+| Role | Can |
+| --- | --- |
+| `user` | Everything their enrolments allow. |
+| `teacher` | Also create courses and editions. |
+| `admin` | Also make teachers. An admin is not implicitly staff anywhere: to see an edition, they enrol in it. |
+
+**Edition roles**, per enrolment:
+
+| Role | Can |
+| --- | --- |
+| `student` | See the edition's open projects, download their starters, submit, and read their own submissions. |
+| `assistant` | Staff: create, edit, reorder projects and publish releases; read every submission. |
+| `owner` | Everything an assistant can, plus run the edition: the roster and roles, duplicating and archiving, deleting projects, and making publishing tokens. |
+
+Pages only show the controls your role can use.
+
+## Enrolment
+
+Staff enrol people **by email address**, before or after that person has ever
+logged in. An address that already belongs to an account links at once; an
+unknown address links at that person's first confirmed login. The roster shows
+who has and has not linked yet. Removing someone is the same whether or not
+they ever logged in.
+
+From the terminal:
+
+```bash
+yukibana enrol <edition-id> alice@school.example bob@school.example
+yukibana members <edition-id>
+yukibana unenrol <edition-id> bob@school.example
+```
+
+## A project's dates
+
+| Date | Meaning |
+| --- | --- |
+| **Available after** | The project opens to students. Unset: a draft only staff see. |
+| **Deadline** | When it is due. Work after it is accepted and marked late. |
+| **Closes** | The project disappears for students and stops accepting work. Unset: never. |
+
+Lateness is computed when it is read, from the time the server stamped on the
+submission, so extending a deadline makes earlier late work on time. Students
+keep access to their own submissions after a project closes.
+
+The student's **To do** tab lists, across every edition, what is still to hand
+in (soonest deadline first, overdue on top) and what is handed in.

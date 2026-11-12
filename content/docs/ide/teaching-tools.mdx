@@ -1,0 +1,58 @@
+---
+title: Teaching tools
+description: Turn code suggestions, problem underlines and AI assistance on or off, per exercise.
+---
+
+A professional IDE is designed to make an expert fast. For a beginner, the
+same help can get in the way of learning: completion writes the code they were
+meant to recall, a sea of red underlines appears before they have typed a full
+line, and an AI assistant will happily solve the whole exercise. Yukibana lets
+the teacher choose, for each exercise, which of these tools are there.
+
+```json title="yukibana.json"
+{
+  "features": {
+    "codeSuggestions": false,
+    "squiggles": false,
+    "ai": false
+  }
+}
+```
+
+Everything is **on** unless set to `false`.
+
+## Code suggestions
+
+`features.codeSuggestions` controls inline suggestions: the completion list of
+words, variables, functions, methods and snippets that pops up as you type.
+With it off, students write every identifier themselves.
+
+## Squiggles
+
+`features.squiggles` controls problem markers: the red and yellow underlines
+for errors and warnings. Turning them off for the first weeks of a course spares
+beginners a screen full of warnings they cannot yet interpret; turning them on
+later teaches them to read the compiler's feedback. The compiler's output is
+still there when they build or run.
+
+## AI assistance
+
+`features.ai` turns Theia's AI features on or off as a whole, overriding the
+student's own setting: the chat, inline prompts and the related menus and
+settings. Yukibana does not decide how a course should use AI; it gives the
+teacher the switch.
+
+## Pacing a course
+
+Because each project carries its own settings, a course can progress
+gradually, for example:
+
+| Weeks | Settings |
+| --- | --- |
+| First exercises | A text editor, a run button and the output. Everything off. |
+| After a few weeks | `squiggles: true`: students learn to read errors in place. |
+| Larger projects | `codeSuggestions: true`, the file explorer and the test view. |
+| Where the course allows it | `ai: true`. |
+
+Finer-grained controls, such as which kinds of suggestion appear or how much
+an AI assistant may see, are on the [roadmap](/docs/vision).

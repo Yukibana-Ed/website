@@ -1,0 +1,30 @@
+---
+title: Telemetry
+description: The groundwork for understanding how students work, and for exam integrity.
+---
+
+<Callout type="warn" title="Early groundwork">
+  Telemetry is in an early state and is not sent anywhere by default. This page
+  describes what exists and where it is headed.
+</Callout>
+
+Yukibana has a telemetry extension that collects events reported under
+`yukibana/` topics inside the IDE (opening a project, submitting, …), batches
+them, and sends them to a telemetry server. A small companion server receives
+the reports.
+
+## Why
+
+Most of the questions teachers have about programming exercises are about the
+*process*, not the final file: where students get stuck, how much of the code
+was typed, pasted or generated, and whether an exam was taken under the
+conditions it was meant for. Telemetry is the basis for answering them, for
+example:
+
+- detecting large pastes and tracking use of completions and AI assistance;
+- replaying how a solution was written, and a live view for invigilators;
+- spotting students who are stuck;
+- helping detect cheating in [exam settings](/docs/vision#exams-and-proctoring).
+
+Any of this will be opt-in per course and designed with students' privacy in
+mind. See the [roadmap](/docs/vision).

@@ -1,0 +1,88 @@
+---
+title: For teachers
+description: Turn a course repository into an exercise, hand it out, and collect the submissions.
+---
+
+A Yukibana exercise is an ordinary project in a Git repository (an sbt or Cargo
+project with its tests) plus a [`yukibana.json`](/docs/reference/yukibana-json)
+at its root, which says how the IDE should look, which files students may not
+change, and which tests they must never see.
+
+<Steps>
+<Step>
+
+### Get a teacher account
+
+Log in at [cloud.yukibana.dev](https://cloud.yukibana.dev). An administrator
+makes your account a teacher, which lets you create courses and editions.
+
+</Step>
+<Step>
+
+### Create a course, an edition and a project
+
+A **course** groups its **editions**, one per semester or year. In an edition,
+create a **project** for each exercise and set its dates: when it opens, its
+deadline, and optionally when it closes.
+
+Enrol students and assistants by email address on the edition's roster, before
+or after they ever log in. See [Courses and roles](/docs/cloud/courses-and-roles).
+
+</Step>
+<Step>
+
+### Describe the exercise in `yukibana.json`
+
+```json title="yukibana.json"
+{
+  "$schema": "https://cloud.yukibana.dev/schema/yukibana.json",
+  "version": 1,
+  "kind": "scala-sbt",
+  "features": { "codeSuggestions": false, "squiggles": true, "ai": false },
+  "openFiles": ["src/main/scala/Main.scala"],
+  "readOnly": ["src/test/**", "ASSIGNMENT.md", "yukibana.json"],
+  "hidden": ["src/test/scala/hidden"]
+}
+```
+
+Write the instructions in `ASSIGNMENT.md`: students see it rendered in its own
+panel when the project opens.
+
+</Step>
+<Step>
+
+### Publish a release
+
+From the repository, check what students would receive, then publish:
+
+```bash
+yukibana check .
+yukibana publish . --project <project-id> --url https://cloud.yukibana.dev
+```
+
+Or let the course repository's CI publish on every push with the
+[GitHub Action](/docs/reference/github-action). Either way the CLI builds two
+archives: the **starter** students download, with the hidden tests removed, and
+the **teacher archive**, with everything.
+
+</Step>
+<Step>
+
+### Collect and grade
+
+```bash
+yukibana download <project-id> --out grading --assemble
+```
+
+gives you one folder per student, each holding their newest submission with the
+read-only and hidden files put back from your release, and a report of any
+protected file they changed. See [Submissions and grading](/docs/cloud/submissions).
+
+</Step>
+</Steps>
+
+<Callout title="One repository, many years">
+  A new edition is a copy of the previous one: projects and staff come along,
+  students and dates do not. Reusing an assignment next year is duplicating the
+  edition.
+</Callout>

@@ -1,0 +1,37 @@
+---
+title: HTTP API
+description: The JSON API the CLI and the IDE use.
+---
+
+Every endpoint speaks JSON and runs **as the caller**, authenticated by an
+`Authorization: Bearer <access token>` header (or, for reads only, the website's
+session cookie). What the caller may see and do is decided by the database's
+policies, not by the endpoint. Writes refuse a cookie: a browser never sends a
+bearer header on another site's behalf, but it does send cookies.
+
+Most integrations should use the [`@yukibana/client`](/docs/developers/integrating)
+library instead of calling these directly.
+
+| Endpoint | |
+| --- | --- |
+| `GET /api/auth/config` | The Auth server and its public key, to start a login. |
+| `GET /api/me` | The caller. |
+| `GET /api/editions` | Editions the caller is enrolled in. |
+| `GET /api/editions/{id}/members` | A roster. |
+| `POST /api/editions/{id}/members` | Enrol: `{ "email", "role" }`. Bearer only. |
+| `DELETE /api/editions/{id}/members?email=` | Unenrol. Bearer only. |
+| `GET /api/projects[?edition=]` | The caller's projects. |
+| `GET /api/projects/{id}` | One project. |
+| `GET /api/projects/{id}/submissions[?latest=true&author=]` | Submissions, newest first. |
+| `POST /api/projects/{id}/submissions[?release=]` | Submit: the `.tar.gz` as the body, `Content-Type: application/gzip`. Answers `201` with the id, size and SHA-256. |
+| `GET /api/projects/{id}/releases` | Releases (staff). |
+| `POST /api/projects/{id}/releases` | Publish: multipart, with a project token or a person's bearer token. |
+| `GET /api/projects/{id}/starter` | A redirect to the newest starter. |
+| `GET /api/submissions/{id}` | A redirect to a submission's archive. |
+| `GET /api/releases/{id}/starter`, `/api/releases/{id}/teacher` | A redirect to a release's archive. |
+
+Downloads redirect to a presigned storage URL valid for one minute.
+
+A refusal carries the HTTP status and a sentence explaining it. The JSON Schema
+of `yukibana.json` is served at
+[`/schema/yukibana.json`](https://cloud.yukibana.dev/schema/yukibana.json).

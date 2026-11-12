@@ -1,0 +1,78 @@
+---
+title: For students
+description: Open an exercise, work on it in Yukibana, and hand it in.
+---
+
+<Steps>
+<Step>
+
+### Install Yukibana and log in to the cloud
+
+[Install the IDE](/docs/getting-started/install), then go to
+[cloud.yukibana.dev](https://cloud.yukibana.dev) and log in with GitHub, or with a
+one-time code sent to your email address. There is no account to create: your
+teacher enrolled your address, and your courses are there at your first login.
+
+</Step>
+<Step>
+
+### Find your exercise
+
+The **To do** tab lists what is still to hand in across all your courses,
+soonest deadline first, and what you have already handed in. An exercise
+appears once it opens and disappears when it closes.
+
+</Step>
+<Step>
+
+### Open it in Yukibana
+
+Click **Open in IDE**. Your browser hands a `yukibana://project/open?id=…` link
+to Yukibana, which asks where to put the project, downloads the starter into
+that folder, and opens it in this window or a new one.
+
+The workspace is set up the way your teacher configured it: the assignment opens
+in its own panel, the files you need are open, and only the tools meant for this
+exercise are shown. Some files, typically the tests, are read-only.
+
+</Step>
+<Step>
+
+### Work, run, test
+
+Write your code, then run it and run the tests.
+
+</Step>
+<Step>
+
+### Submit
+
+Click **Submit**. Yukibana logs you in to the cloud if needed (through your
+browser), shows the exact list of files that will be sent, and sends them once
+you confirm. You can submit as many times as you like: every version is kept,
+and the newest is the one that counts.
+
+</Step>
+</Steps>
+
+## Deadlines and late work
+
+An exercise has a window: it becomes visible on its opening date and stops
+accepting work on its closing date, if it has one. The **deadline** sits inside
+that window. After it you can still submit, and your submission is recorded as
+**late**. If your teacher extends the deadline, work you already handed in
+counts as on time.
+
+## Without the IDE
+
+Everything also works from a terminal with the [`yukibana` CLI](/docs/reference/cli),
+and from the cloud's web pages, where you can download the starter and upload an
+archive.
+
+```bash
+yukibana login --url https://cloud.yukibana.dev
+yukibana projects --open        # what you can hand in now
+yukibana starter <project-id>   # download and unpack the starter
+cd <project>
+yukibana submit                 # lists what would be sent, asks, sends
+```

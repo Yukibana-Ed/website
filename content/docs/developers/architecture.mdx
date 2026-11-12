@@ -1,0 +1,80 @@
+---
+title: Architecture
+description: How the repository is laid out and how the parts fit together.
+---
+
+Everything lives in one repository,
+[Yukibana-Ed/Yukibana](https://github.com/Yukibana-Ed/Yukibana), a pnpm
+workspace.
+
+<Files>
+  <Folder name="ide" defaultOpen>
+    <Folder name="browser" />
+    <Folder name="electron" />
+    <Folder name="extensions" defaultOpen>
+      <Folder name="yukibana" />
+      <Folder name="yukibana-cloud" />
+      <Folder name="yukibana-submission" />
+      <Folder name="yukibana-telemetry" />
+      <Folder name="yukibana-launcher" />
+      <Folder name="yukibana-product" />
+      <Folder name="langs" />
+    </Folder>
+    <Folder name="e2e" />
+  </Folder>
+  <Folder name="cloud" defaultOpen>
+    <Folder name="web" />
+    <Folder name="db" />
+    <Folder name="dev" />
+  </Folder>
+  <Folder name="packages" defaultOpen>
+    <Folder name="client" />
+    <Folder name="cli" />
+  </Folder>
+  <Folder name="action" />
+</Files>
+
+## The IDE
+
+The IDE is an [Eclipse Theia](https://theia-ide.org/) application, packaged
+for Electron (`ide/electron`) and the browser (`ide/browser`). Theia is built
+from extensions wired together by dependency injection, and Yukibana's
+behaviour is a handful of its own:
+
+| Extension | |
+| --- | --- |
+| `yukibana` | The customisations: loading `yukibana.json` (and reloading it live), the layout, widget and view filtering, the toolbar, toggling suggestions, problem markers and AI, read-only files, the assignment panel, notification filtering. |
+| `yukibana-submission` | Preparing and sending a submission, with pluggable submission targets. |
+| `yukibana-cloud` | Logging in to the cloud, the cloud submission target, `yukibana://` links, and assignment updates. |
+| `yukibana-telemetry` | A telemetry sink that batches and sends events. |
+| `yukibana-launcher` | A desktop entry and a command-line launcher. |
+| `yukibana-product` | Product branding. |
+| `langs` | Language support (Scala). |
+
+Most features work by rebinding one of Theia's services to Yukibana's own, for
+example the problem manager (to drop markers), the file system provider (to
+refuse writes to read-only files) or the message service (to silence
+notifications).
+
+## The cloud
+
+| | |
+| --- | --- |
+| The app | SvelteKit, one Cloudflare Worker (`cloud/web`). |
+| Database and Auth | Postgres and Auth on Supabase (`cloud/db`), reached through Cloudflare Hyperdrive. The schema changes only through migrations, and authorisation is entirely row-level policies. |
+| Files | Cloudflare R2, through its S3 API. The database holds the keys. |
+| Live updates | Supabase Realtime: a change broadcasts "this edition changed", and open pages reload their data. |
+
+## Shared code
+
+`packages/client` (`@yukibana/client`) is the library the IDE's extensions and
+the CLI share: the API client, login, building submission bundles, unpacking
+starters, assembling submissions, and parsing `yukibana.json`.
+`packages/cli` is the `yukibana` command over it, and `action/` wraps the CLI as
+a GitHub Action.
+
+## This website
+
+The documentation site, [Yukibana-Ed/website](https://github.com/Yukibana-Ed/website),
+is [Fumadocs](https://fumadocs.dev/) on React Router and Vite, prerendered to
+static files and served by a Cloudflare Worker.

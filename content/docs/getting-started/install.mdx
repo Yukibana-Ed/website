@@ -1,0 +1,53 @@
+---
+title: Install the IDE
+description: Download Yukibana for Windows, macOS or Linux.
+---
+
+Installers for every version are on the
+[GitHub releases page](https://github.com/Yukibana-Ed/Yukibana/releases/latest).
+
+| Platform | File |
+| --- | --- |
+| Windows (x64) | `YukibanaSetup-<version>.exe` |
+| macOS, Apple silicon | `Yukibana-arm64-<version>.dmg` |
+| macOS, Intel | `Yukibana-x64-<version>.dmg` |
+| Linux (x64) | `Yukibana-<version>.AppImage` |
+
+<Tabs items={["Windows", "macOS", "Linux"]}>
+  <Tab value="Windows">
+    Run `YukibanaSetup-<version>.exe` and follow the installer. Yukibana then
+    appears in the Start menu, and opens the `yukibana://` links the cloud uses
+    to open exercises.
+  </Tab>
+  <Tab value="macOS">
+    Open the `.dmg` that matches your Mac (Apple silicon or Intel) and drag
+    Yukibana into Applications.
+  </Tab>
+  <Tab value="Linux">
+    Make the AppImage executable and run it:
+
+    ```bash
+    chmod +x Yukibana-*.AppImage
+    ./Yukibana-*.AppImage
+    ```
+
+    Yukibana can create a desktop entry and a `yukibana` command for itself, so
+    that `yukibana://` links from the browser open in the IDE.
+  </Tab>
+</Tabs>
+
+## Languages
+
+Yukibana ships with what a course needs to build, run and test its projects.
+Course projects currently declare one of two kinds:
+
+- **Scala** with sbt (`scala-sbt`), with the Metals language server;
+- **Rust** with Cargo (`rust-cargo`).
+
+Because Yukibana runs VS Code extensions, another language is a matter of
+bundling the right extension and toolchain. Tell us which ones your course needs.
+
+<Callout type="warn" title="Early releases">
+  The current releases are previews meant for feedback. Expect rough edges, and
+  please [report them](https://github.com/Yukibana-Ed/Yukibana/issues).
+</Callout>

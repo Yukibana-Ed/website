@@ -1,0 +1,112 @@
+---
+title: Integrating the client library
+description: Use @yukibana/client to log in, list exercises and submit from any IDE or tool.
+---
+
+What a student's IDE needs from Yukibana is four things: who the student is,
+which exercises are open to them, what a submission from their folder would
+hold, and a way to send it. All four are in `@yukibana/client`, the library the
+Yukibana IDE and the CLI share. It runs on Node.js 24: a Theia backend, an
+Electron main process, a VS Code extension host.
+
+The library is **headless**. It owns the protocol, the data, the disk and the
+network, and nothing a person sees: opening a browser, the page shown after a
+login, every list and button is the host's. Where a person must see something,
+it takes a callback or returns data to render.
+
+## Frontend and backend
+
+```
+ frontend (browser / renderer)       backend (Node)                    registry
+ ───────────────────────────────     ──────────────────────────────    ─────────────────────
+ exercise list, preview, buttons  ⇄  YukibanaClient, SessionStore,  ⇄  /api/... as the student
+ never sees a token or the disk      SubmissionBundle, login           (policies decide)
+```
+
+Keep the session, the client and every bundle in the backend; the frontend asks
+for lists and verdicts over the host's RPC. Browser code may import only
+`@yukibana/client/config` and `@yukibana/client/assembly` at runtime, and types
+from the root.
+
+## Logging in
+
+```ts
+import { loginWithLoopback, startLogin } from '@yukibana/client';
+
+// Desktop: back to a listener on 127.0.0.1 on a free port.
+const session = await loginWithLoopback(registry, {
+  open: (url) => openExternal(url),
+  callbackPage: (outcome) => (outcome.ok ? signedInPage() : failedPage(escapeHtml(outcome.reason))),
+});
+
+// Browser-hosted IDE: back to a route the IDE's server owns.
+const pending = await startLogin(registry, 'https://ide.example.org/yukibana/callback');
+openInNewTab(pending.authorizeUrl);
+const session2 = await pending.finish(callbackUrl);
+```
+
+With the loopback, the browser goes to the cloud's `/auth/connect` page, where
+the person logs in if needed and chooses **Continue as** that account, **Use a
+different account**, or **Cancel**. The IDE gets a session of its own, separate
+from the website's, so logging out of one leaves the other signed in.
+
+## Keeping the session
+
+```ts
+import { tokenProvider, YukibanaClient, type SessionStore } from '@yukibana/client';
+
+const store: SessionStore = {
+  load: async () => JSON.parse((await secrets.get('yukibana.session')) ?? 'null'),
+  save: async (s) => secrets.set('yukibana.session', JSON.stringify(s)),
+  clear: async () => secrets.delete('yukibana.session'),
+};
+await store.save(session);
+const client = new YukibanaClient({ url: registry, accessToken: tokenProvider(store) });
+```
+
+Store the session where the host keeps secrets, never in plain settings.
+`tokenProvider` refreshes the access token before it expires, saves the rotated
+pair, and never runs two refreshes at once. When it cannot refresh it throws
+`NotLoggedIn`: show the login again.
+
+## Exercises
+
+```ts
+const projects = await client.projects();
+```
+
+For a student, this returns only projects whose window is open now. Each has
+`deadline`, `late`, `closesAt`, `canSubmit`, `starterReady`, `mySubmissions` and
+`myLastSubmittedAt`. `client.downloadStarter(id)` and
+`unpackStarter(archive, folder)` fetch and unpack a starter into an empty
+folder, safely.
+
+## Submitting: prepare, preview, send
+
+```ts
+import { createSubmissionBundle } from '@yukibana/client';
+
+const made = await createSubmissionBundle(workspaceRoot);
+if (!made.ok) return showProblems(made.problems);
+const b = made.bundle;
+b.files;      // [{ path, type, size, mode }]: exactly what the archive will hold
+b.skipped;    // what the rules left out
+b.problems;   // reasons not to send (too large, a link out of the folder)
+b.read(path); // the exact bytes that will be sent, for a preview
+
+if (b.problems.length === 0 && (await confirm(`Send ${b.files.length} files?`))) {
+  const { submissionId, byteSize, sha256 } = await client.submit(b);
+}
+```
+
+## The whole API
+
+`YukibanaClient` has `me`, `editions`, `members`, `enrol`, `unenrol`,
+`projects`, `project`, `submissions`, `releases`, `submit`, `submitArchive`,
+`publishRelease`, `downloadSubmission`, `downloadStarter` and `downloadRelease`.
+A refusal is a `RegistryError` with the HTTP status and the cloud's sentence.
+
+`@yukibana/client/config` reads a folder's `yukibana.json` with the IDE's
+defaults (`parseSettings`), and `matcher(globs)` answers "is this path
+read-only?" with the same rules an assembly uses. `@yukibana/client/assembly`
+assembles a submission, as the cloud's staff pages do.

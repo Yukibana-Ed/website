@@ -1,0 +1,73 @@
+---
+title: Workspace
+description: The layout a student opens into, the assignment panel, and read-only files.
+---
+
+## An uncluttered layout
+
+A fresh IDE greets a student with a dozen panels, a terminal and a stream of
+notifications. Yukibana opens every project in the same, deliberately small,
+layout, and hides the views a teacher has not asked for.
+
+```json title="yukibana.json"
+{
+  "layout": {
+    "widgets": {
+      "files": false,
+      "search": false,
+      "vcs": false,
+      "debug": false,
+      "testing": false,
+      "outline": false,
+      "aiChat": false
+    },
+    "containers": { "metals-explorer": false }
+  }
+}
+```
+
+`layout.widgets` toggles Yukibana's own views: the file explorer, search,
+source control, debugger, test explorer, outline and AI chat.
+`layout.containers` toggles view containers contributed by extensions, by id,
+such as the Metals explorer of the Scala extension. The layout is restored the
+same way every time the project opens, and the terminal is not available. Some
+notifications that only confuse beginners are silenced.
+
+## The assignment panel
+
+The file named by `assignmentFile` (by default `ASSIGNMENT.md`) opens rendered
+in a dedicated panel when the project opens, so the instructions are always
+one click away.
+
+## Files opened at start
+
+`openFiles` lists the files opened in the editor when the project opens, in
+order, for example the README and the file to complete.
+
+```json
+{ "openFiles": ["README.md", "src/main/scala/Main.scala"] }
+```
+
+## Read-only files
+
+`readOnly` is a list of globs for files the student receives but may not
+change, typically the provided tests, the instructions and `yukibana.json`
+itself. The editor refuses edits to them.
+
+```json
+{ "readOnly": ["src/test/**", "README.md", "yukibana.json"] }
+```
+
+<Callout title="Enforced where it matters">
+  On the student's own machine, read-only can only be a courtesy: the files are
+  on their disk. What enforces it is grading. When staff
+  [assemble](/docs/cloud/submissions#assembly) a submission, every read-only file
+  is replaced by the teacher's version and every change is reported.
+</Callout>
+
+## Opening a project from a link
+
+Yukibana handles `yukibana://project/open?id=<project-id>` links. The cloud's
+**Open in IDE** button uses one: Yukibana asks where to put the project,
+downloads and unpacks the starter there, and opens it in the current or a new
+window.

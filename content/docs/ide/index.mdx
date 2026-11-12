@@ -1,0 +1,48 @@
+---
+title: Overview
+description: A Theia-based IDE that shows students exactly the tools an exercise calls for.
+---
+
+Yukibana IDE is built on [Eclipse Theia](https://theia-ide.org/), the open
+platform behind several VS Code–like IDEs. It is **not** a fork of VS Code, but
+it runs VS Code extensions, so the language servers, build systems and test
+frameworks a course uses work as they would in a professional editor.
+
+## Why Theia
+
+Two routes were on the table at the start of the project: take VS Code and
+switch off what students should not have, or take Theia and build up from a
+bare text editor. VS Code has more features out of the box, but a teaching IDE
+needs control over every one of them, and a VS Code fork is a large codebase
+to maintain that also loses access to the official extension marketplace.
+Theia is designed to be assembled from extensions, which makes "start with
+almost nothing, add what the course needs" the natural shape.
+
+## What a teacher controls
+
+Everything below is set per project in [`yukibana.json`](/docs/reference/yukibana-json),
+which travels with the starter, and is re-read live when it changes.
+
+<Cards>
+  <Card title="Teaching tools" href="/docs/ide/teaching-tools">
+    Code suggestions, error and warning underlines, AI assistance: each on or off.
+  </Card>
+  <Card title="Workspace" href="/docs/ide/workspace">
+    An uncluttered layout, the assignment panel, files opened at start, read-only files.
+  </Card>
+  <Card title="Submitting" href="/docs/ide/submitting">
+    Prepare, preview and send a submission to the cloud, or save it as a file.
+  </Card>
+  <Card title="Assignment updates" href="/docs/ide/assignment-updates">
+    Bring a teacher&apos;s fix into a project already started, with a guided merge.
+  </Card>
+  <Card title="Telemetry" href="/docs/ide/telemetry">
+    The groundwork for understanding how students actually work.
+  </Card>
+</Cards>
+
+## Desktop and browser
+
+Yukibana is packaged as a desktop application for Windows, macOS and Linux
+([install](/docs/getting-started/install)), and also builds as a browser app,
+so a school can eventually hand students a URL instead of an installer.

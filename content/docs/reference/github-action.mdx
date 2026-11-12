@@ -1,0 +1,70 @@
+---
+title: GitHub Action
+description: Publish a release from the course repository's CI on every push.
+---
+
+The action builds the starter and teacher archives from the checked-out
+repository with the CLI, and uploads them as a new release of a project. It
+builds the CLI from its own checkout, so the course repository needs nothing
+else installed.
+
+```yaml title=".github/workflows/yukibana.yml"
+name: Publish to Yukibana
+on:
+  push:
+    branches: [main]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Yukibana-Ed/Yukibana/action@main
+        with:
+          url: https://cloud.yukibana.dev
+          project: ${{ vars.YUKIBANA_PROJECT }}
+          token: ${{ secrets.YUKIBANA_TOKEN }}
+```
+
+<Steps>
+<Step>
+
+### Make a publishing token
+
+On the project's page in the cloud, an owner creates a **publishing token**. It
+is shown once.
+
+</Step>
+<Step>
+
+### Store it in the repository
+
+In the course repository's settings on GitHub, add the token as the secret
+`YUKIBANA_TOKEN`, and the project id (also on the project page) as the variable
+`YUKIBANA_PROJECT`.
+
+</Step>
+<Step>
+
+### Push
+
+Each push to `main` now publishes a release. If the checks fail (a hidden path
+that matches nothing, a broken `yukibana.json`, …), the job fails with every
+reason and nothing is uploaded.
+
+</Step>
+</Steps>
+
+## Inputs
+
+| Input | Required | |
+| --- | --- | --- |
+| `url` | yes | The cloud, e.g. `https://cloud.yukibana.dev`. |
+| `project` | yes | The project id, from the project page. |
+| `token` | yes | A publishing token for that project. |
+| `directory` | no | The project directory, when it is not the repository root. Default `.`. |
+| `folder` | no | The folder the archives unpack into. Default: the repository's name. |
+| `label` | no | A label for the release. Default: the short commit hash. |
+
+A token can only publish releases to its one project. If it leaks, staff see the
+releases it made, can publish a correct one after them, and can revoke it.

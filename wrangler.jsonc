@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // The documentation site at https://yukibana.dev. It is static: `pnpm build`
+  // prerenders every route into build/client and the Worker only serves those
+  // files, so there is no `main` and no code runs per request.
+  "name": "yukibana-website",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./build/client",
+    // /docs/cli is served from docs/cli/index.html (no redirect to a trailing
+    // slash, matching the links React Router renders), and an unknown path
+    // gets the prerendered 404 page with a 404 status.
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page",
+  },
+  "observability": { "enabled": true },
+  // Previews of pull requests at pr-<n>-yukibana-website.<subdomain>.workers.dev.
+  "preview_urls": true,
+  "routes": [
+    { "pattern": "yukibana.dev", "custom_domain": true },
+    { "pattern": "www.yukibana.dev", "custom_domain": true },
+  ],
+}

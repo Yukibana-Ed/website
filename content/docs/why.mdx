@@ -1,0 +1,98 @@
+---
+title: Why Yukibana?
+description: Professional tools are built to make experts fast. Beginners need something else.
+---
+
+> The entire raison d'être of Yukibana is to eliminate the accidental
+> complexity of professional tools.
+
+## The problem
+
+Programming courses usually teach on the tools professionals use: IntelliJ,
+VS Code, Eclipse. Those tools are built to make an expert as fast as possible.
+For someone writing their first program, the same tools get in the way.
+
+**Setup comes before learning.** Installing a JDK, a build tool and a set of
+extensions, and getting them to agree, is a lesson of its own, and rarely the
+one the course is about. When it fails, the first week goes to fixing laptops
+instead of writing code.
+
+**The feedback is overwhelming.** A beginner's file is covered in red and
+yellow underlines before they have finished typing a line. Error messages
+written for experts can stress a beginner more than they help.
+
+**The help does the thinking.** Completion fills in the method the student was
+meant to recall. AI is now everywhere, including inside the editor: an assistant
+will happily write the whole exercise. A student can end up accepting
+suggestions until the code works, without knowing whether they solved the
+problem or the assistant did. And it is hard for a beginner to switch AI off.
+
+**Evaluation is hard.** With AI one keystroke away, a lot of assessment is going
+back to pen and paper, or to locked-down exam setups that are painful to run.
+
+**Handing out and collecting work is manual.** Starter code goes out as a zip on
+the course page and comes back as a zip by email or on Moodle. A fixed typo
+cannot reach students who already started, nobody can tell which submission was
+built on an outdated starter, and every teacher has their own scripts to unpack,
+check and grade the work.
+
+## What Yukibana does about it
+
+> No learning without cognitive sweat. You fail, fail, fail, and then you know.
+
+Yukibana keeps the **fruitful friction**, the effort that makes students learn,
+and removes the **sterile friction** of tools that fight them.
+
+<Cards>
+  <Card title="Simple setup" href="/docs/getting-started/students">
+    One installer, and each exercise opens from a link with everything it needs:
+    the instructions, the right files, a real build and the tests.
+  </Card>
+  <Card title="Features that grow with the course" href="/docs/ide/teaching-tools">
+    The teacher decides, per exercise, which tools are there, from a text editor
+    and a run button up to the full IDE.
+  </Card>
+  <Card title="Awareness and control of AI" href="/docs/ide/teaching-tools#ai-assistance">
+    AI assistance is a switch the teacher holds. Yukibana does not decide how a
+    course should use AI; it makes the choice possible.
+  </Card>
+  <Card title="Submission, grading and exams" href="/docs/cloud">
+    Hand-in is a button. Teachers get every submission assembled, with hidden
+    tests restored and tampering reported. Exams are next.
+  </Card>
+</Cards>
+
+## Why not just configure VS Code?
+
+You can switch a lot of things off in VS Code, but not reliably, not per
+exercise, and not in a way the student cannot simply switch back on. A teaching
+IDE needs the configuration to come with the exercise, to apply as soon as the
+project opens, and to be checked when the work comes back. Yukibana is built on
+[Eclipse Theia](https://theia-ide.org/), so it can start from a bare editor and
+add only what is wanted, while still running the VS Code extensions that give
+real language support. See [the IDE overview](/docs/ide#why-theia).
+
+## Who it is for
+
+Yukibana is first and foremost a code editor for teaching general-purpose
+programming, and the courses that matter most are the ones that **introduce**
+programming.
+
+- **Students**, especially beginners, who should spend their effort on the
+  problem, not on the tools.
+- **Teachers and assistants**, who want to pace their course, hand out and
+  collect exercises without scripts, and grade against tests the students never
+  saw. They should not need to be tech experts to do it.
+- **Schools**, which want reproducible environments and a credible way to run
+  programming exams.
+
+Yukibana started in the ISC department of the
+[HES-SO Valais/Wallis](https://www.hevs.ch/) School of Engineering, and is being
+extended to the school's other programmes. It is meant for any school that
+teaches programming.
+
+## Prior art
+
+Yukibana learns from platforms built for the same reasons, notably TU Delft's
+[WebLab](https://weblab.tudelft.nl/), and from browser playgrounds such as
+Compiler Explorer, which inspired [Yukibana Light](/docs/light).

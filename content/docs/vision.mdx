@@ -1,0 +1,102 @@
+---
+title: Vision and roadmap
+description: Where Yukibana is going, and what is already there.
+---
+
+## The dream
+
+A student goes to a URL. The exercise downloads and opens in Yukibana, with the
+assignment on screen and nothing else in the way. They do the exercise, click a
+button to hand it in, and that's it. The teacher sees who submitted, runs the
+public and hidden tests, and grades.
+
+That loop works today. The rest of the roadmap is about making it richer for
+teaching, and making it work in exams.
+
+## Where it stands
+
+| | Status |
+| --- | --- |
+| An IDE that edits, builds, runs and tests code, with no assistance | ✅ Done |
+| Configuring which tools are available, per exercise | 🟡 Main toggles done; finer granularity in progress |
+| Course projects, releases and submissions in the cloud | ✅ Done |
+| Assembling submissions with hidden tests and tamper reports | ✅ Done |
+| Assignment updates with a guided merge | ✅ Done |
+| [Yukibana Light](/docs/light): in-browser editing and execution | ✅ Available |
+| Automated evaluation reports | 🔜 Planned |
+| Moodle integration (rosters, then submissions) | 🔜 Planned |
+| Exam mode and proctoring integration | 🟡 Groundwork |
+| Telemetry and cheating detection | 🟡 Groundwork |
+| Pre-configured development environments (dev containers) | 🔜 Planned |
+| User guide and pedagogical scenarios | 🔜 Planned |
+
+## More languages, as modules
+
+Scala and Rust are supported today, and Python is next. The aim is for
+languages and project types to be modules loaded on demand, much like VS Code
+extensions, so that supporting a new language does not mean the core team
+maintaining it by hand. Yukibana focuses on ordinary programs that run on the
+student's machine, not on emulating specific hardware.
+
+## Teaching tools, in finer detail
+
+Today each teaching tool is a single switch. Next is granularity where it helps:
+
+- **Suggestions** by kind (words, variables, members, parameters, snippets),
+  per-exercise snippets, and only the signatures seen in class so far;
+- **AI** at levels between nothing and everything: type-based smart completion,
+  a Socratic tutor that asks rather than answers, a chat that may not read or
+  change the student's files, or a restricted context (the student's own files,
+  the selection, the exercise statement);
+- **hover information**, **go to definition**, **code actions** (format,
+  imports, refactoring) and the **debugger**, each toggleable, with a simplified
+  debugger for beginners;
+- a view that shows the student which features are on, and onboarding.
+
+## Self-assessment and awareness
+
+Helping students see how they work, without shaming: an assistance usage report
+("how much of this code did I write?"), recall exercises, self-assessment
+quizzes, and difficulty ratings that feed back to the teacher.
+
+## Exams and proctoring
+
+Exams are where Yukibana's controls matter most. The plan:
+
+- an **exam configuration** that delivers the assignment and offline
+  documentation, with no internet, built as presets on top of the same
+  settings a teacher can override;
+- detecting when the window **loses focus** and when large blocks are
+  **pasted**, recorded locally and sent with the submission, so a flaky
+  network is never mistaken for cheating;
+- integration with **HybridProctor** to receive exam resources, kept decoupled
+  so other proctoring tools can be used;
+- **telemetry**: detecting large pastes, tracking assistance use, replay, and a
+  live remote view for invigilators;
+- **cheating detection** built on that telemetry.
+
+## Exercises and grading
+
+- **Chained exercises** and multi-part assignments, submitted step by step;
+- **automated evaluation**: hidden tests run when grading, with the share of
+  tests passed shown to staff;
+- **rubric-based feedback**: the teacher defines criteria ("is it quadratic?",
+  "does it use the standard library?"), and the grade and per-criterion feedback
+  follow from them, checked by tests, by hand, or with AI assistance;
+- integrations with grading and learning platforms such as Moodle, and peer
+  review.
+
+The longer-term idea is a common place where teachers build homework from many
+kinds of exercises, coding and otherwise.
+
+## Environments
+
+High-fidelity, reproducible build environments, so what runs on a student's
+laptop is what runs when it is graded, and a browser-hosted IDE so a school can
+give students a URL instead of an installer.
+
+## Get involved
+
+Yukibana is shaped by the teachers who use it. If you teach programming, tell us
+what your greatest challenges are, and what would keep you from adopting
+Yukibana, in an [issue on GitHub](https://github.com/Yukibana-Ed/Yukibana/issues).

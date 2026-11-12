@@ -1,0 +1,50 @@
+---
+title: Assignment updates
+description: When the teacher publishes a fix, students bring it in with a guided merge, not git.
+---
+
+Assignments have typos and broken tests, and teachers fix them after students
+have started. With Yukibana, the teacher publishes a new [release](/docs/cloud/releases)
+and the IDE offers every student to bring their folder up to date, without
+anyone needing to know git.
+
+## How the student sees it
+
+When a newer release exists, Yukibana announces it with a notification, an item
+in the status bar, and an **Assignment Update** view in the side panel. "Later"
+never loses it: the status bar item and the view stay until the update is
+applied. The submit dialog also says when a newer version is waiting.
+
+The IDE checks every five minutes, and every minute in the two hours before the
+deadline.
+
+## What the update does
+
+In one step, the update writes every file that needs no decision:
+
+- **read-only files**, which always take the teacher's version;
+- **files only the teacher changed**.
+
+Files **both** the student and the teacher changed keep the student's version
+and are listed to settle: in Theia's three-way merge editor, or with **Keep
+mine** or **Use teacher's**. A student's own edits to a read-only file are
+always replaced, but as an explicit step, with **Review my changes** offered
+first.
+
+Every file the update touches is backed up first. One **Undo** puts it all
+back, and an update interrupted halfway is rolled back the next time the IDE
+checks.
+
+<Callout title="Why not git?">
+  Many students are not yet fluent in git, and a merge conflict is often met by
+  accepting everything. The guided update keeps the decisions few and explicit,
+  and only asks about files where both sides really changed.
+</Callout>
+
+## On the teacher's side
+
+Each submission records the release it started from. Staff see which
+submissions are not based on the newest release, and the CLI warns about them
+when downloading. Assembly measures a student's changes against the release
+they started from, so a teacher's later fix is never reported as the student's
+change. See [Submissions and grading](/docs/cloud/submissions#assembly).

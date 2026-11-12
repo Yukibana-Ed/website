@@ -1,0 +1,33 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+/* The logo's five petals. */
+:root {
+  --yb-yellow: #f7f19f;
+  --yb-pink: #e2abba;
+  --yb-purple: #a890c0;
+  --yb-teal: #98c7bf;
+  --yb-blue: #8cc6e6;
+  --color-fd-primary: #6e4f9a;
+  --color-fd-primary-foreground: #ffffff;
+}
+
+.dark {
+  --yb-yellow: #4a4520;
+  --yb-pink: #4a2a35;
+  --yb-purple: #3a2d4d;
+  --yb-teal: #23403b;
+  --yb-blue: #1f3e50;
+  --color-fd-primary: #c4b0dc;
+  --color-fd-primary-foreground: #1b1324;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+html > body[data-scroll-locked] {
+  margin-right: 0px !important;
+  --removed-body-scroll-bar-size: 0px !important;
+}

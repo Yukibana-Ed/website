@@ -1,0 +1,53 @@
+---
+title: Releases
+description: How a course repository becomes the starter students download.
+---
+
+A **release** of a project is two archives, both built from a checkout of the
+course repository by `yukibana build` and uploaded by `yukibana publish` or the
+[GitHub Action](/docs/reference/github-action):
+
+- **the starter**, which students download: the project minus `.github/` and
+  everything `hidden` matches, with a copy of `yukibana.json` where `hidden` is
+  removed and the project and release ids are added;
+- **the teacher archive**, for staff: the project as it is, hidden tests and
+  all, minus `.git/`, `.theia/` and build output. Students can never fetch it.
+
+The cloud checks that each is a gzip archive under the size cap, records sizes
+and SHA-256s, and serves the newest starter to students whose project is open.
+Staff see the whole history and can download either archive of any release.
+
+## Checks before publishing
+
+`yukibana check` and `yukibana build` refuse to produce a release, listing every
+reason, when:
+
+- `yukibana.json` is missing, does not parse, or has a wrong field;
+- `hidden` names paths and none of them matches anything (a typo would otherwise
+  ship the hidden tests);
+- `Cargo.toml` names a hidden path, or the project's manifest (`Cargo.toml`,
+  `build.sbt`) is missing. Hidden tests must be discovered automatically, because
+  deleting a file the manifest points at leaves a starter that does not build;
+- a symbolic link points outside the repository.
+
+A field the current version does not know is kept with a warning, so a misspelt
+`"hiden"` is printed instead of silently shipping the tests.
+
+```bash
+yukibana check .                  # what would be hidden; exit code 1 on a problem
+yukibana build . --out .yukibana  # starter.tar.gz and teacher.tar.gz, to look inside
+yukibana publish . --project <id> # build and upload a release
+```
+
+## Updating an exercise
+
+Publish again. Students who download the starter from then on get the new
+release. Every submission records the release its starter came from, so grading
+can tell what a student changed from what a later release changed, and the CLI
+warns about submissions that are not based on the newest release.
+
+## Publishing tokens
+
+CI cannot log in through a browser, so it uses a **project token**, made by an
+owner on the project page. It is shown once and stored only as a hash, it can
+only publish releases to that one project, and it can be revoked from the page.

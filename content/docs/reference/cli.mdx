@@ -1,0 +1,64 @@
+---
+title: CLI
+description: The yukibana command, for teachers' releases and grading, and for students' submissions.
+---
+
+The `yukibana` command is a thin layer over the same library the IDE uses, so
+whatever the terminal does, the IDE does the same way. What a command shows is
+what your role lets you see: the cloud runs every request as you.
+
+## Install
+
+The CLI lives in the [Yukibana repository](https://github.com/Yukibana-Ed/Yukibana)
+and needs Node.js 24 and pnpm:
+
+```bash
+git clone https://github.com/Yukibana-Ed/Yukibana.git
+cd Yukibana
+pnpm setup:cli
+alias yukibana="node $PWD/packages/cli/lib/index.js"
+```
+
+In CI, use the [GitHub Action](/docs/reference/github-action), which builds
+the CLI itself.
+
+## Logging in
+
+```bash
+yukibana login --url https://cloud.yukibana.dev
+```
+
+opens your browser on the cloud's sign-in page, where you confirm the account,
+and comes back to the CLI (OAuth with PKCE, through a listener on
+`127.0.0.1`). The session is stored in `~/.config/yukibana/session.json` (or
+under `$XDG_CONFIG_HOME` or `$YUKIBANA_CONFIG_DIR`), readable only by you, and
+refreshed as it is used. `yukibana logout` ends it.
+
+Where no browser can reach the machine, set `YUKIBANA_ACCESS_TOKEN` instead.
+
+## Commands
+
+| Command | |
+| --- | --- |
+| `whoami` | Who you are logged in as. |
+| `editions` | The editions you are enrolled in. |
+| `members <edition>` | A roster (staff see everyone). |
+| `enrol <edition> <email>...`, `unenrol <edition> <email>...` | Add or remove people (owners). |
+| `projects [--edition <id>] [--open]` | Your projects; `--open` keeps those taking your submissions now. |
+| `project [<id>]` | One project. |
+| `releases [<id>]` | Its releases (staff). |
+| `starter <id> [--out <dir>]` | Download and unpack the starter into an empty or new folder, by default `./<project slug>/`. |
+| `pack [<dir>] [--out <file>]` | List what `submit` would send and write the archive, by default into a new temporary folder, never into the project. |
+| `submit [<dir>] [--yes]` | List what would be sent, ask, send. The project is the one in `./yukibana.json`. |
+| `submissions [<id>] [--latest] [--student-submissions <who>]` | Newest first; staff see everyone's. Late ones are marked, with the release each started from. |
+| `download [<id>] [--out <dir>]` | Each student's newest submission. See [Submissions and grading](/docs/cloud/submissions#downloading) for the options. |
+| `assemble <submission> --teacher <archive or dir> --out <dir>` | Assemble files you already have. |
+| `check [<dir>]` | What a release would hide; exit code 1 on a problem. |
+| `build [<dir>] [--out <dir>]` | Build `starter.tar.gz` and `teacher.tar.gz` to look inside. |
+| `publish [<dir>] --project <id> [--url <cloud>] [--token <token>]` | Build and upload a release, with a project token or your login. |
+
+<Callout title="Checked downloads">
+  Every download is checked against the SHA-256 the cloud recorded when the file
+  arrived, and a starter unpack never writes outside its folder; one that fails
+  leaves nothing behind.
+</Callout>

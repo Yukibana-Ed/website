@@ -1,0 +1,75 @@
+---
+title: yukibana.json
+description: The file at the root of a course project that configures the IDE, the starter and submissions.
+---
+
+`yukibana.json` is the contract between a course repository and Yukibana. It
+lives at the project root and is read by two programs: the student's **IDE**,
+for how the workspace looks and which files are read-only, and the **CLI**, for
+what a student must never receive and what a submission holds.
+
+```json title="yukibana.json"
+{
+  "$schema": "https://cloud.yukibana.dev/schema/yukibana.json",
+  "version": 1,
+  "kind": "scala-sbt",
+  "features": { "codeSuggestions": true, "squiggles": true, "ai": false },
+  "layout": {
+    "widgets": { "files": false, "search": false, "vcs": false, "debug": false, "testing": false, "outline": false, "aiChat": false },
+    "containers": { "metals-explorer": false }
+  },
+  "openFiles": ["README.md", "src/main/scala/Main.scala"],
+  "readOnly": ["src/test/**", "README.md", "yukibana.json"],
+  "hidden": ["src/test/scala/hidden"],
+  "submission": { "exclude": ["notes"] }
+}
+```
+
+<Callout title="Editor support">
+  Set `$schema` to `https://cloud.yukibana.dev/schema/yukibana.json` and any
+  editor that understands JSON Schema checks the file as you type.
+</Callout>
+
+## Fields
+
+| Field | Required | Meaning |
+| --- | --- | --- |
+| `version` | yes | Always `1` for now. A future shape gets a new number, never a silent reinterpretation. |
+| `kind` | yes | `scala-sbt` or `rust-cargo`. Chooses the build output no archive carries (`target/`, `project/target/`, `.bsp`, `.metals`, …) and the manifest checks. |
+| `assignmentFile` | no | The file the IDE opens as the assignment. Default `ASSIGNMENT.md`. |
+| `features` | no | Teaching tools: `codeSuggestions`, `squiggles`, `ai`. See [Teaching tools](/docs/ide/teaching-tools). |
+| `layout` | no | `widgets` and `containers` shown at start. See [Workspace](/docs/ide/workspace). |
+| `openFiles` | no | Files opened in the editor when the project opens. |
+| `readOnly` | no | Globs of files the student receives and may not change. The IDE stops edits; an assembly replaces them with the teacher's version and reports every change. |
+| `hidden` | no | Globs of files the student never receives. Removed from the starter (and from the starter's copy of this file); put back by an assembly. |
+| `submission.include` | no | When present, only matching paths are submitted (and `yukibana.json`, always). |
+| `submission.exclude` | no | Globs never submitted. |
+| `submission.respectGitignore` | no | Leave out what the project's `.gitignore` files ignore, as git would. Default `true`. |
+| `submission.target` | no | Where the IDE sends a submission: `cloud` (default) or `file`, an archive the student saves. The CLI always sends to the cloud. |
+| `submission.filename` | no | What `yukibana pack` names the archive. Default `submission.tar.gz`. |
+| `submission.maxBytes` | no | The largest submission this project expects. Default 32 MiB; the cloud has its own cap above which this cannot go. |
+| `projectId` | no | Written into the starter's copy by `publish`. Tells the IDE and `yukibana submit` where a submission goes. A course repository leaves it out. |
+| `releaseId` | no | Written into the starter's copy by `publish` and `build`: the release this starter is, sent with each submission. A course repository leaves it out. |
+
+In `features` and `layout`, everything is on unless set to `false`.
+
+## Globs
+
+Globs are relative to the project root.
+
+- `*` matches within one path segment, `**` across segments, `?` one character.
+- A pattern that names a directory covers everything under it: `tests/*`
+  covers `tests/a/b.rs` too.
+- There is no negation.
+
+## Always excluded
+
+Whatever the file says:
+
+- `.git/` and `.theia/` are never in any archive or submission;
+- `node_modules/` (at any depth) and the kind's build output are never in a
+  submission;
+- `yukibana.json` is always in a submission.
+
+The IDE and `yukibana submit` apply the same rules through the same library
+function, so they always send the same files.

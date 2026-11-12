@@ -1,0 +1,62 @@
+---
+title: Overview
+description: A registry for course projects and the work students hand in.
+---
+
+Yukibana Cloud, at [cloud.yukibana.dev](https://cloud.yukibana.dev), is where
+exercises are handed out and handed in. It is deliberately a **registry**: it
+stores what it is given and transforms nothing.
+
+- A teacher publishes a **release** of a project: two archives built from the
+  course repository by the [CLI](/docs/reference/cli), on their machine or in the
+  repository's CI through the [GitHub Action](/docs/reference/github-action).
+  The **starter** has the hidden tests removed; the **teacher archive** is the
+  whole project, for staff.
+- Students download the starter while the project's window is open, and
+  submit their solution as a `.tar.gz`, late if after the deadline.
+- Staff read the submissions, and download them **assembled**: with the
+  read-only and hidden files put back, and every tampered file reported.
+
+## What it does not do
+
+Some things are left out on purpose, at least for now:
+
+- **It never reads a repository.** An earlier design built starters inside the
+  cloud on every push, through a GitHub App. That needed a paid hosting plan for
+  the CPU time, a webhook surface, and a copy of every teacher's repository.
+  Building in the CLI, where the repository already is, removed all three.
+- **It never runs student code.**
+- **No grading, feedback, plagiarism checks, team submissions or per-student
+  extensions yet**, and no self-service joining or invitation emails:
+  enrolment is silent, and the course is simply there at the student's first
+  login. These are designed to be added later without fighting what exists,
+  together with roster and grading integrations such as Moodle.
+
+## Logging in
+
+Identity is a verified email address. People log in with **GitHub**, or with a
+**one-time code** sent to their address; there are no passwords. Enrolment
+matches on the address, so a student whose GitHub address differs from their
+school address simply uses the code. The CLI and the IDE log in through the
+website, as the account the person confirms there. CI publishes with a
+per-project token instead.
+
+## Live pages
+
+Open pages update by themselves: when a project, a release, the roster or a
+submission changes, everyone looking at that edition sees it without reloading.
+
+## Privacy and authorisation
+
+Every rule about who may see or do what lives in the database's row-level
+policies, and every request runs as the person making it, so the website, the
+CLI and the IDE cannot see more than the policies allow. A student never sees
+another person's address; staff see the roster of their own editions only.
+Submissions are append-only: there is no way to change or delete one.
+
+<Cards>
+  <Card title="Courses and roles" href="/docs/cloud/courses-and-roles" />
+  <Card title="Releases" href="/docs/cloud/releases" />
+  <Card title="Submissions and grading" href="/docs/cloud/submissions" />
+  <Card title="HTTP API" href="/docs/reference/http-api" />
+</Cards>

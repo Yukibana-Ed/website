@@ -1,0 +1,50 @@
+---
+title: Yukibana Light
+description: Write, run and analyse code in the browser, offline, with nothing to install.
+---
+
+[Yukibana Light](https://light.yukibana.dev) is an editor that runs entirely in
+the browser. Language servers, compilers and programs all run locally as
+WebAssembly, so once loaded it works **offline**, and there is nothing to
+install and no server running anyone's code.
+
+<Callout>
+  Try it at [light.yukibana.dev](https://light.yukibana.dev).
+</Callout>
+
+## What it does
+
+- **Language servers**: completion, diagnostics and navigation, as in the
+  desktop IDE.
+- **Run code**, with the output in the page.
+- **Testing frameworks**, to run an exercise's tests.
+- **Static analysis** and **dynamic analysis** of a running program.
+- **Compiler output inspection**, to see what the compiler makes of the code.
+- **Sharing**: a project can be shared as a link that contains it.
+
+Languages include **Scala, Python, Swift, C and C++**, with more to come.
+
+## Why in the browser
+
+WebAssembly is already a sandbox. Running everything on the student's machine
+means no virtual machines on a server to compile, run or grade code, no hosting
+bill that grows with the class, and no outage when a hundred students press
+**Run** at once. Light is ideal for a first contact with a language, for small
+exercises, and for examples embedded in course material.
+
+## Light and the full IDE
+
+Light is a modular engine that can be used as a library, with
+light.yukibana.dev as its demo site. It is independent of the desktop IDE for
+now. A project can be **scaffolded** into the language's native build setup
+(sbt, Cargo, …) to continue in the [Yukibana IDE](/docs/ide) with the real
+toolchain.
+
+## Where it is going
+
+- embeddable editors, as web components, for course pages and slides;
+- composable language packs;
+- debugging;
+- richer libraries, such as numpy and pygame for Python;
+- visual block programming that translates into text languages;
+- connection to [Yukibana Cloud](/docs/cloud) projects.
