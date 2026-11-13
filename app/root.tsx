@@ -4,7 +4,6 @@ import type { Route } from './+types/root';
 import './app.css';
 import NotFound from './routes/not-found';
 import StaticSearchDialog from './components/search';
-import { BarVariants } from './components/bar-variants/bar-switcher';
 
 export const links: Route.LinksFunction = () => [
   { rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' },
@@ -35,12 +34,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return (
-    <>
-      <Outlet />
-      <BarVariants />
-    </>
-  );
+  return <Outlet />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
