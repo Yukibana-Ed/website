@@ -35,7 +35,7 @@ export function Hero() {
 
 /**
  * The lattice: it fills the panel and shows only toward the edges, never behind the text. Above 760px the mask is an
- * ellipse touching the panel's sides, clear to 58%. A phone's panel is tall and narrow, so that ellipse would leave the
+ * ellipse touching the panel's sides, clear to 66%. A phone's panel is tall and narrow, so that ellipse would leave the
  * lattice behind the text; there it is drawn to the corners, clear to 64%, which leaves the lattice in the corners and
  * out of the 16px-guttered column.
  */
@@ -43,7 +43,7 @@ function EdgeLattice() {
   return (
     <div
       aria-hidden
-      className="yk-lattice absolute inset-0 [mask:radial-gradient(farthest-corner,transparent_64%,#000)] min-[760px]:[mask:radial-gradient(closest-side,transparent_58%,#000)]"
+      className="yk-lattice absolute inset-0 [mask:radial-gradient(farthest-corner,transparent_64%,#000)] min-[760px]:[mask:radial-gradient(closest-side,transparent_66%,#000)]"
     />
   );
 }
