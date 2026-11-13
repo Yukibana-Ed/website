@@ -17,9 +17,8 @@ pnpm dev            # http://localhost:5173
 Pages are MDX in `content/docs/`. Each folder's `meta.json` orders its pages, and `content/docs/meta.json` the sidebar.
 The landing page is `app/routes/home.tsx`.
 
-The look is Yukibana's design system: its tokens and shared styles are copied into `app/design/` from the
-`@yukibana/design` package in the Yukibana repository (see `app/design/README.md`), and `app/app.css` maps Fumadocs'
-colours onto them.
+The look is Yukibana's design system (see [Design system](#design-system)); `app/app.css` maps Fumadocs' colours
+onto it.
 
 |                                                    |                                                                                       |
 | -------------------------------------------------- | ------------------------------------------------------------------------------------- |
@@ -27,6 +26,21 @@ colours onto them.
 | `pnpm build`                                       | Prerender every page, the search index, OG images and `llms.txt` into `build/client`. |
 | `pnpm preview`                                     | Build, then serve `build/client` exactly as production does (`wrangler dev`).         |
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | oxlint, TypeScript, oxfmt.                                                            |
+
+## Design system
+
+The tokens, the shared component styles and the fonts come from `@yukibana/design`, which lives in the
+[Yukibana repository](https://github.com/tothambrus11/Yukibana) in `packages/design`. It is a git dependency pinned to
+one commit of that repository (`package.json`), and `app/app.css` imports its `tokens.css`, `fonts.css` and `base.css`.
+The fonts are self-hosted: Vite bundles the package's woff2 files with the site.
+
+To take a newer version of the design:
+
+1. Change the commit after `#` in the `@yukibana/design` entry of `package.json` to the new one.
+2. Run `pnpm install`, which updates `pnpm-lock.yaml`.
+3. Check the site with `pnpm dev` (the landing page and a docs page, light and dark) and run `pnpm typecheck`,
+   `pnpm lint` and `pnpm build`.
+4. Commit `package.json` and `pnpm-lock.yaml` together.
 
 ## Deploy
 
