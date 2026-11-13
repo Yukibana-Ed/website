@@ -8,6 +8,15 @@
 /* The lifted header bar's materials under review (components/bar-variants/variants.ts). */
 @import './components/bar-variants/bar-variants.css';
 
+/* Links in the docs' text are green, as everywhere: Fumadocs' prose rule sits in Tailwind's utilities layer and would
+   beat the design system's link rule (components layer) with its own colour, the foreground. */
+.prose {
+  --tw-prose-links: var(--yk-accent-strong);
+}
+.prose :where(a:not([data-card])):not(:where(.not-prose, .not-prose *)) {
+  text-decoration-color: currentColor;
+}
+
 /* The theme switch sets class="light" or "dark" on <html>; the tokens follow color-scheme. */
 html.light {
   color-scheme: light;
@@ -203,8 +212,8 @@ samp {
 #nd-sidebar > * {
   background: var(--yk-surface);
 }
-/* The current page: a grey fill and bold, not a coloured bar or green text. */
-#nd-sidebar a[data-active='true'] {
+/* The current page: a grey fill and bold, not a coloured bar or green text; in the sidebar and in the phone's drawer. */
+:is(#nd-sidebar, #nd-sidebar-mobile) a[data-active='true'] {
   background: var(--yk-sunken);
   color: var(--yk-ink);
   font-weight: var(--yk-font-weight-bold);
