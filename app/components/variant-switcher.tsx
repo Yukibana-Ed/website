@@ -85,25 +85,28 @@ export function createVariantStore<Id extends string>({
 
 /**
  * The review switcher: a small segmented control floating at the bottom right, "<label>: <name>" and one button per
- * variant, labelled with its id.
+ * variant, labelled with its id. `stack` lifts it above the switchers below it, where a page shows more than one.
  */
 export function VariantSwitcher<Id extends string>({
   label,
   variants,
   current,
   onChoose,
+  stack = 0,
 }: {
   label: string;
   variants: readonly Variant<Id>[];
   current: Id;
   onChoose: (id: Id) => void;
+  stack?: number;
 }) {
   const name = variants.find((v) => v.id === current)?.name;
   return (
     <div
       role="group"
       aria-label={`${label} variant`}
-      className="fixed right-4 bottom-4 z-50 flex max-w-[calc(100vw-2rem)] items-center gap-2 rounded-(--yk-radius-lg) border border-(--yk-line) bg-(--yk-surface) p-1 pl-3 text-(length:--yk-font-size-sm)"
+      style={{ bottom: `calc(1rem + ${stack} * 3rem)` }}
+      className="fixed right-4 z-50 flex max-w-[calc(100vw-2rem)] items-center gap-2 rounded-(--yk-radius-lg) border border-(--yk-line) bg-(--yk-surface) p-1 pl-3 text-(length:--yk-font-size-sm)"
     >
       <span className="truncate text-(--yk-soft) max-[479.98px]:hidden">
         {label}: <span className="text-(--yk-ink)">{name}</span>

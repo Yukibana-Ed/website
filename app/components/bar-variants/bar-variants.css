@@ -1,0 +1,162 @@
+/* The lifted header bar's materials under review (variants.ts); 1, "Current", is design/base.css's and sets nothing
+   here. Each variant fills four properties of the bar, one section each, tuned separately for the light and dark
+   themes: light-dark() for colours, `:root.dark` for the backdrop filter, which light-dark() cannot reach. Only the
+   material changes: the bar's layout and size are base.css's.
+
+   --bar-bg       the fill (background)
+   --bar-filter   the backdrop filter: blur, saturation, brightness
+   --bar-border   the border's colour (the lifted bar only: below 760px it is the full-width bar's hairline)
+   --bar-shadow   inner highlights and the outer shadow (the lifted bar only) */
+
+:root[data-bar] .yk-header--float {
+  /* Light from above: the surface itself in the light theme, a faint ink line in the dark one. */
+  --bar-hi: light-dark(var(--yk-surface), color-mix(in oklch, var(--yk-ink) 16%, transparent));
+  /* The outer shadow's colour: the current bar's, from the tokens. */
+  --bar-shade: light-dark(
+    color-mix(in oklch, var(--yk-ink) 45%, transparent),
+    color-mix(in oklch, var(--yk-bg) 90%, transparent)
+  );
+  background: var(--bar-bg);
+  backdrop-filter: var(--bar-filter);
+  transition:
+    background-color var(--yk-motion-fast) var(--yk-motion-ease),
+    border-color var(--yk-motion-fast) var(--yk-motion-ease),
+    box-shadow var(--yk-motion-fast) var(--yk-motion-ease);
+}
+@media (min-width: 760px) {
+  :root[data-bar] .yk-header--float {
+    border-color: var(--bar-border);
+    box-shadow: var(--bar-shadow);
+  }
+}
+/* Without a backdrop filter, a see-through bar would leave the page's text sharp behind its own: every bar is solid. */
+@supports not (backdrop-filter: blur(1px)) {
+  .yk-header,
+  :root[data-bar] .yk-header--float {
+    background: var(--bar-solid, var(--yk-surface));
+  }
+}
+
+/* 2, "Nearly opaque": 95% surface, a light 6px blur, saturate 1.2; the current hairline and shadow. */
+:root[data-bar='2'] .yk-header--float {
+  --bar-bg: color-mix(in oklch, var(--yk-surface) 95%, transparent);
+  --bar-filter: blur(6px) saturate(1.2);
+  --bar-border: var(--yk-line);
+  --bar-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--yk-surface) 60%, transparent), 0 10px 30px -18px var(--bar-shade);
+}
+
+/* 3, "Heavy frost": 62% surface (66% dark), a 30px blur, saturate 1.8; the hairline, a top highlight, the shadow. */
+:root[data-bar='3'] .yk-header--float {
+  --bar-bg: color-mix(in oklch, var(--yk-surface) 62%, transparent);
+  --bar-filter: blur(30px) saturate(1.8);
+  --bar-border: var(--yk-line);
+  --bar-shadow: inset 0 1px 0 var(--bar-hi), 0 10px 30px -18px var(--bar-shade);
+}
+:root.dark[data-bar='3'] .yk-header--float {
+  --bar-bg: color-mix(in oklch, var(--yk-surface) 66%, transparent);
+}
+
+/* 4, "Clear glass": 35% surface (45% dark), an 8px blur, saturate 1.5; a 1px inner highlight at the top, a hairline,
+   the shadow. */
+:root[data-bar='4'] .yk-header--float {
+  --bar-bg: color-mix(in oklch, var(--yk-surface) 35%, transparent);
+  --bar-filter: blur(8px) saturate(1.5);
+  --bar-border: color-mix(in oklch, var(--yk-line) 80%, transparent);
+  --bar-shadow: inset 0 1px 0 var(--bar-hi), 0 10px 30px -18px var(--bar-shade);
+}
+:root.dark[data-bar='4'] .yk-header--float {
+  --bar-bg: color-mix(in oklch, var(--yk-surface) 45%, transparent);
+  --bar-filter: blur(8px) saturate(1.3) brightness(0.85);
+}
+
+/* 5, "Vibrancy": 62% of the surface with a 6% hint of the info blue, a 20px blur, saturate 180%, the backdrop lifted
+   (brightness 1.08) in the light theme and lowered (0.85) in the dark one; the hairline and the shadow. */
+:root[data-bar='5'] .yk-header--float {
+  --bar-bg: color-mix(in oklch, color-mix(in oklch, var(--yk-surface) 94%, var(--yk-info)) 62%, transparent);
+  --bar-filter: blur(20px) saturate(180%) brightness(1.08);
+  --bar-border: var(--yk-line);
+  --bar-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--yk-surface) 60%, transparent), 0 10px 30px -18px var(--bar-shade);
+}
+:root.dark[data-bar='5'] .yk-header--float {
+  --bar-filter: blur(20px) saturate(180%) brightness(0.85);
+}
+
+/* 6, "Liquid glass": very clear, 30% surface (40% dark) under a highlight that fades from the top, a 24px blur,
+   saturate 2; no hairline, but the edges catch the light: inset highlights on top and sides, a darker inset at the
+   bottom, an inner glow around the rim, and a soft outer shadow. */
+:root[data-bar='6'] .yk-header--float {
+  --bar-bg:
+    linear-gradient(
+      to bottom,
+      color-mix(in oklch, var(--bar-hi) 55%, transparent),
+      transparent 55%,
+      color-mix(in oklch, var(--bar-hi) 20%, transparent)
+    ),
+    color-mix(in oklch, var(--yk-surface) var(--bar-fill, 30%), transparent);
+  --bar-filter: blur(24px) saturate(2);
+  --bar-border: transparent;
+  --bar-shadow:
+    inset 0 1px 0 var(--bar-hi), inset 1px 0 0 color-mix(in oklch, var(--bar-hi) 60%, transparent),
+    inset -1px 0 0 color-mix(in oklch, var(--bar-hi) 60%, transparent),
+    inset 0 -1px 0 color-mix(in oklch, var(--yk-ink) 10%, transparent),
+    inset 0 0 14px color-mix(in oklch, var(--bar-hi) 45%, transparent), 0 14px 34px -16px var(--bar-shade);
+}
+:root.dark[data-bar='6'] .yk-header--float {
+  --bar-fill: 40%;
+  --bar-filter: blur(24px) saturate(1.6) brightness(0.8);
+}
+
+/* 7, "Accent tint": 80% of the surface with 7% of the accent green in it, a 14px blur, saturate 1.4; the hairline
+   tinted the same way, the current shadow. */
+:root[data-bar='7'] .yk-header--float {
+  --bar-bg: color-mix(in oklch, color-mix(in oklch, var(--yk-surface) 93%, var(--yk-accent)) 80%, transparent);
+  --bar-filter: blur(14px) saturate(1.4);
+  --bar-border: color-mix(in oklch, var(--yk-line) 75%, var(--yk-accent));
+  --bar-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--yk-surface) 60%, transparent), 0 10px 30px -18px var(--bar-shade);
+}
+
+/* 8, "Grain frost": 72% surface, an 18px blur, saturate 1.5, and a fine grey grain over it (an inline SVG noise at 7%
+   opacity, the same in both themes); the hairline and the shadow. */
+:root[data-bar='8'] .yk-header--float {
+  --bar-bg:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E"),
+    color-mix(in oklch, var(--yk-surface) 72%, transparent);
+  --bar-filter: blur(18px) saturate(1.5);
+  --bar-border: var(--yk-line);
+  --bar-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--yk-surface) 60%, transparent), 0 10px 30px -18px var(--bar-shade);
+}
+
+/* 9, "Smoked": a dark glass bar in both themes. The bar takes the dark colour scheme, so its own text and controls
+   take the dark theme's tokens; its fill is 72% of the dark page colour, over a 16px blur, saturate 1.2 and the
+   backdrop darkened to 70%; a faint light hairline and a top highlight, the shadow. */
+:root[data-bar='9'] .yk-header--float {
+  color-scheme: dark;
+  --bar-bg: color-mix(in oklch, var(--yk-bg) 72%, transparent);
+  --bar-solid: var(--yk-bg);
+  --bar-filter: blur(16px) saturate(1.2) brightness(0.7);
+  --bar-border: color-mix(in oklch, var(--yk-ink) 14%, transparent);
+  --bar-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--yk-ink) 10%, transparent),
+    0 10px 30px -16px color-mix(in oklch, var(--yk-bg) 70%, transparent);
+}
+
+/* 10, "Clears at the top": at the top of the page, 50% surface, a 10px blur, saturate 1.3, a half-strength hairline
+   and no shadow; once the page scrolls, 90% surface, a 16px blur, saturate 1.5, the hairline and the current
+   shadow. */
+:root[data-bar='10'] .yk-header--float {
+  --bar-bg: color-mix(in oklch, var(--yk-surface) 50%, transparent);
+  --bar-filter: blur(10px) saturate(1.3);
+  --bar-border: color-mix(in oklch, var(--yk-line) 50%, transparent);
+  --bar-shadow: 0 0 0 transparent;
+}
+:root[data-bar='10'][data-bar-scrolled] .yk-header--float {
+  --bar-bg: color-mix(in oklch, var(--yk-surface) 90%, transparent);
+  --bar-filter: blur(16px) saturate(1.5);
+  --bar-border: var(--yk-line);
+  --bar-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--yk-surface) 60%, transparent), 0 10px 30px -18px var(--bar-shade);
+}

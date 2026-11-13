@@ -17,7 +17,7 @@ const store = createVariantStore({
  */
 export const useHeroVariant = store.useVariant;
 
-/** The review switcher at the bottom right, one letter per variant. */
+/** The review switcher at the bottom right, one letter per variant, above the bar's (bar-variants/). */
 export function HeroSwitcher({ current, onChoose }: { current: HeroId; onChoose: (id: HeroId) => void }) {
-  return <VariantSwitcher label="Hero" variants={heroVariants} current={current} onChoose={onChoose} />;
+  return <VariantSwitcher label="Hero" variants={heroVariants} current={current} onChoose={onChoose} stack={1} />;
 }
