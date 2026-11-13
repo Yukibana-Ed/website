@@ -1,4 +1,4 @@
-import { useRef, useState, type ComponentProps, type ReactNode, type RefObject } from 'react';
+import { useEffect, useRef, useState, type ComponentProps, type ReactNode, type RefObject } from 'react';
 
 /**
  * A code block as an Expressive Code frame, like hylo-lang.org's: a block with a title (a file) gets Light's dock tab
@@ -42,18 +42,36 @@ export function CodeBlock({
   );
 }
 
-/** Copies the block's text; its icon turns into a check for two seconds, so the button itself says it worked. */
+/**
+ * Copies the block's text; its icon turns into a check for two seconds, so the button itself says it worked, and a
+ * screen reader hears "Copied". Where the browser refuses the clipboard (no permission, not a secure page), the button
+ * says "Copy failed" instead of failing silently. A second click restarts the two seconds; leaving the page cancels them.
+ */
 function CopyButton({ from }: { from: RefObject<HTMLPreElement | null> }) {
-  const [done, setDone] = useState(false);
+  const [state, setState] = useState<'idle' | 'done' | 'failed'>('idle');
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
   const onClick = async () => {
     const text = from.current?.textContent;
     if (text == null) return;
-    await navigator.clipboard.writeText(text);
-    setDone(true);
-    setTimeout(() => setDone(false), 2000);
+    let next: 'done' | 'failed';
+    try {
+      await navigator.clipboard.writeText(text);
+      next = 'done';
+    } catch {
+      next = 'failed';
+    }
+    setState(next);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setState('idle'), 2000);
   };
+  const done = state === 'done';
+  const label = done ? 'Copied' : state === 'failed' ? 'Copy failed' : 'Copy';
   return (
-    <button type="button" className="yk-icon-btn" onClick={onClick} aria-label={done ? 'Copied' : 'Copy'}>
+    <button type="button" className="yk-icon-btn" onClick={onClick} aria-label={label} title={label}>
+      <span className="sr-only" aria-live="polite">
+        {state === 'idle' ? '' : label}
+      </span>
       {done ? (
         <svg className="yk-icon" viewBox="0 0 24 24" aria-hidden>
           <path d="m5 12 5 5 9-10" />
