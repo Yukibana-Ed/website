@@ -1,4 +1,4 @@
-import type { ComponentProps, CSSProperties } from 'react';
+import { useEffect, useRef, type ComponentProps, type CSSProperties } from 'react';
 import type { DocsLayoutProps } from 'fumadocs-ui/layouts/docs';
 import { useDocsLayout } from 'fumadocs-ui/layouts/docs';
 import { Container } from 'fumadocs-ui/layouts/docs/slots/container';
@@ -23,14 +23,29 @@ export function docsOptions(): Omit<DocsLayoutProps, 'tree'> {
 
 /**
  * The landing page's lifted header, with the button that opens the sidebar's drawer where the sidebar is hidden. It
- * sticks to the top of the window; app.css gives its height and the space it takes, which everything below it sticks
- * under.
+ * sticks to the top of the window, and everything below it sticks under it: its height is measured here and set on the
+ * root as --docs-header-height, which app.css turns into the space it takes.
  */
 function DocsHeader() {
   const { slots } = useDocsLayout();
   const Trigger = slots.sidebar.trigger;
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const header = ref.current?.querySelector('.yk-header');
+    if (!header) return;
+    const root = document.documentElement;
+    const observer = new ResizeObserver(([entry]) => {
+      const height = entry.borderBoxSize[0]?.blockSize ?? header.getBoundingClientRect().height;
+      root.style.setProperty('--docs-header-height', `${height}px`);
+    });
+    observer.observe(header);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty('--docs-header-height');
+    };
+  }, []);
   return (
-    <div className="yk-docs-header sticky top-0 z-30 [grid-area:header]">
+    <div ref={ref} className="yk-docs-header sticky top-0 z-30 [grid-area:header]">
       <SiteHeader
         float
         start={

@@ -128,20 +128,23 @@ samp {
   text-decoration: none;
 }
 
-/* The docs (lib/layout.shared.tsx) have the landing page's lifted header. It is given a fixed height, its natural one,
-   so that --docs-header-space, the room it takes at the top of the window, is known: the sidebar and the table of
-   contents stick below that, and a heading reached by its anchor lands below it. At 760px and wider the header floats
-   12px below the window's top, the margin base.css gives it; below 760px it is the full-width bar. */
+/* The docs (lib/layout.shared.tsx) have the landing page's lifted header. --docs-header-space is the room it takes at
+   the top of the window: the sidebar and the table of contents stick below that, and a heading reached by its anchor
+   lands below it. At 760px and wider the header floats 12px below the window's top, the margin base.css gives it;
+   below 760px it is the full-width bar. --docs-header-height is the header's own height: DocsHeader measures it and
+   sets it on the root, so a change to the header moves everything with it. The values here are its natural heights,
+   for the prerendered page until the script runs. */
+:root {
+  --docs-header-height: 47px;
+}
 #nd-docs-layout {
-  --docs-header-height: 48px;
   --docs-header-space: var(--docs-header-height);
 }
-#nd-docs-layout .yk-header {
-  height: var(--docs-header-height);
-}
 @media (min-width: 760px) {
+  :root {
+    --docs-header-height: 50.92px;
+  }
   #nd-docs-layout {
-    --docs-header-height: 51px;
     --docs-header-space: calc(12px + var(--docs-header-height));
   }
 }
