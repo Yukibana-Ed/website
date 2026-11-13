@@ -239,6 +239,37 @@ samp {
   box-shadow: inset 0 -1px 0 var(--yk-accent);
 }
 
+/* The ink ring on Fumadocs' own controls. Their Tailwind utilities, focus-visible:outline-none with a box-shadow ring
+   (Copy Markdown, Open, Copy Anchor Link) or outline-none (a tab's panel), sit in the utilities layer and beat the design
+   system's ring, which is in the components layer. These rules are unlayered, so they win; they match only elements
+   carrying those utilities or Fumadocs' tabs, so the design system's own controls keep their rings and offsets. A
+   field keeps its own focus. */
+.yk-root :is([class*='focus-visible:ring'], [class*='outline-none']):not(input, textarea):focus-visible {
+  outline: var(--yk-focus-width) solid var(--yk-ink);
+  outline-offset: var(--yk-focus-offset);
+  box-shadow: none;
+}
+/* Fumadocs' tabs and table of contents: the row of tabs and the contents' list scroll, and a tab's panel sits in a frame
+   that clips, so a ring drawn outside would be cut off; it is drawn inside, as on the design system's tabs. A tab has
+   no padding of its own, so while focused it gets room for the ring, taken back by its margin: nothing moves. */
+.yk-root :is([role='tab'], [role='tabpanel']):not([class*='yk-']):focus-visible,
+#nd-toc a:focus-visible {
+  outline: var(--yk-focus-width) solid var(--yk-ink);
+  outline-offset: calc(-1 * var(--yk-focus-width));
+}
+.yk-root [role='tab']:not([class*='yk-']):focus-visible {
+  margin-inline: calc(-2 * var(--yk-focus-width));
+  padding-inline: calc(2 * var(--yk-focus-width));
+}
+/* Tailwind's transition-colors, on many of Fumadocs' controls, also fades the outline's colour: a focused link's ring
+   faded in from its grey text colour. Every outline is the ink before focus too, so the ring is the ink at once. In
+   the base layer, so the design system's and Tailwind's own outline colours still win. */
+@layer base {
+  .yk-root * {
+    outline-color: var(--yk-ink);
+  }
+}
+
 /* The landing page (routes/home.tsx): its lifted header is exactly as wide as its content. One width does both, the
    design system's --yk-layout-header-max. The header's border box is at most that wide; each section is that wide plus
    its px-4 padding, so its text edges fall where the header's border does. On a narrower window both keep the same 1rem
