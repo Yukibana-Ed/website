@@ -1,21 +1,80 @@
-import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
-import { appName, cloudUrl, lightUrl, mainRepo } from './shared';
+import { useEffect, useRef, type ComponentProps, type CSSProperties } from 'react';
+import type { DocsLayoutProps } from 'fumadocs-ui/layouts/docs';
+import { useDocsLayout } from 'fumadocs-ui/layouts/docs';
+import { Container } from 'fumadocs-ui/layouts/docs/slots/container';
+import { SiteHeader } from '@/components/site-header';
 
-export function baseOptions(): BaseLayoutProps {
+/**
+ * Fumadocs' docs layout with the landing page's site header on top, instead of fumadocs' own header (which it only
+ * shows on a phone). The brand, search and links live in that header, so the sidebar holds only the pages and the
+ * theme switch.
+ */
+export function docsOptions(): Omit<DocsLayoutProps, 'tree'> {
   return {
-    nav: {
-      title: (
-        <>
-          <img src="/logo.svg" alt="" width={24} height={24} className="size-6" />
-          <span className="font-semibold">{appName}</span>
-        </>
-      ),
+    searchToggle: { enabled: false },
+    sidebar: { collapsible: false },
+    slots: {
+      navTitle: () => null,
+      header: DocsHeader,
+      container: DocsContainer,
     },
-    links: [
-      { text: 'Docs', url: '/docs', active: 'nested-url' },
-      { text: 'Cloud', url: cloudUrl, external: true },
-      { text: 'Light', url: lightUrl, external: true },
-    ],
-    githubUrl: mainRepo,
   };
+}
+
+/**
+ * The landing page's lifted header, with the button that opens the sidebar's drawer where the sidebar is hidden. It
+ * sticks to the top of the window, and everything below it sticks under it: its height is measured here and set on the
+ * root as --docs-header-height, which app.css turns into the space it takes.
+ */
+function DocsHeader() {
+  const { slots } = useDocsLayout();
+  const Trigger = slots.sidebar.trigger;
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const header = ref.current?.querySelector('.yk-header');
+    if (!header) return;
+    const root = document.documentElement;
+    const observer = new ResizeObserver(([entry]) => {
+      const height = entry.borderBoxSize[0]?.blockSize ?? header.getBoundingClientRect().height;
+      root.style.setProperty('--docs-header-height', `${height}px`);
+    });
+    observer.observe(header);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty('--docs-header-height');
+    };
+  }, []);
+  return (
+    <div ref={ref} className="yk-docs-header sticky top-0 z-30 [grid-area:header]">
+      <SiteHeader
+        float
+        start={
+          <Trigger className="yk-icon-btn md:hidden" aria-label="Pages">
+            <svg className="yk-icon" viewBox="0 0 24 24" aria-hidden>
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </Trigger>
+        }
+      />
+    </div>
+  );
+}
+
+/**
+ * Fumadocs' grid, with the header's row spanning every column. The outer columns, beyond the reading width, are the
+ * rails that carry the lattice (see app.css).
+ */
+function DocsContainer(props: ComponentProps<'div'>) {
+  const style = {
+    gridTemplate: `"header header header header header"
+"sidebar sidebar toc-popover toc toc"
+"sidebar sidebar tabs toc toc"
+"sidebar sidebar main toc toc" 1fr / minmax(min-content, 1fr) var(--fd-sidebar-col) minmax(0, calc(var(--fd-layout-width) - var(--fd-sidebar-width) - var(--fd-toc-width))) var(--fd-toc-width) minmax(min-content, 1fr)`,
+    '--fd-layout-width': '84rem',
+    '--fd-docs-row-1': 'var(--docs-header-space)',
+    '--fd-docs-row-2': 'var(--docs-header-space)',
+    '--fd-docs-row-3': 'calc(var(--docs-header-space) + var(--fd-toc-popover-height))',
+    ...props.style,
+  } as CSSProperties;
+  return <Container {...props} style={style} />;
 }

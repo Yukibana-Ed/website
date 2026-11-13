@@ -1,26 +1,65 @@
 @import 'tailwindcss';
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
+/* Yukibana's design system, @yukibana/design (see README.md): its tokens, its self-hosted fonts, and the shared
+   components, which sit in the components layer, so a Tailwind utility on the same element still wins. */
+@import '@yukibana/design/tokens.css';
+@import '@yukibana/design/fonts.css';
+@import '@yukibana/design/base.css' layer(components);
 
-/* The logo's five petals. */
-:root {
-  --yb-yellow: #f7f19f;
-  --yb-pink: #e2abba;
-  --yb-purple: #a890c0;
-  --yb-teal: #98c7bf;
-  --yb-blue: #8cc6e6;
-  --color-fd-primary: #6e4f9a;
-  --color-fd-primary-foreground: #ffffff;
+/* Links in the docs' text are green, as everywhere: Fumadocs' prose rule sits in Tailwind's utilities layer and would
+   beat the design system's link rule (components layer) with its own colour, the foreground. */
+.prose {
+  --tw-prose-links: var(--yk-accent-strong);
+}
+.prose :where(a:not([data-card])):not(:where(.not-prose, .not-prose *)) {
+  text-decoration-color: currentColor;
 }
 
-.dark {
-  --yb-yellow: #4a4520;
-  --yb-pink: #4a2a35;
-  --yb-purple: #3a2d4d;
-  --yb-teal: #23403b;
-  --yb-blue: #1f3e50;
-  --color-fd-primary: #c4b0dc;
-  --color-fd-primary-foreground: #1b1324;
+/* The theme switch sets class="light" or "dark" on <html>; the tokens follow color-scheme. */
+html.light {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+
+/* Fumadocs' colours, drawn from the tokens. light-dark() inside each token does the theme, so .dark needs nothing of
+   its own; it is listed only to win over Fumadocs' own .dark rules. */
+:root,
+.dark,
+.dark #nd-sidebar {
+  --color-fd-background: var(--yk-bg);
+  --color-fd-foreground: var(--yk-ink);
+  --color-fd-muted: var(--yk-sunken);
+  --color-fd-muted-foreground: var(--yk-soft);
+  --color-fd-popover: var(--yk-surface);
+  --color-fd-popover-foreground: var(--yk-ink);
+  --color-fd-card: var(--yk-surface);
+  --color-fd-card-foreground: var(--yk-ink);
+  --color-fd-border: var(--yk-line);
+  /* Fumadocs marks the current page, heading and tab in its primary colour. Those are ink here: green is only for
+     primary buttons, links and the current tab's line. */
+  --color-fd-primary: var(--yk-ink);
+  --color-fd-primary-foreground: var(--yk-bg);
+  --color-fd-secondary: var(--yk-sunken);
+  --color-fd-secondary-foreground: var(--yk-ink);
+  --color-fd-accent: var(--yk-sunken);
+  --color-fd-accent-foreground: var(--yk-ink);
+  --color-fd-ring: var(--yk-ink);
+  --color-fd-info: var(--yk-info);
+  --color-fd-warning: var(--yk-warn);
+  --color-fd-error: var(--yk-danger);
+  --color-fd-success: var(--yk-ok);
+  --color-fd-diff-add: color-mix(in oklch, var(--yk-ok) 13%, transparent);
+  --color-fd-diff-add-symbol: var(--yk-ok);
+  --color-fd-diff-remove: color-mix(in oklch, var(--yk-danger) 11%, transparent);
+  --color-fd-diff-remove-symbol: var(--yk-danger);
+}
+
+@theme {
+  --font-sans: var(--yk-font-family-body);
+  --font-mono: var(--yk-font-family-mono);
 }
 
 html {
@@ -30,4 +69,280 @@ html {
 html > body[data-scroll-locked] {
   margin-right: 0px !important;
   --removed-body-scroll-bar-size: 0px !important;
+}
+
+/* Headings in Bricolage at the heading weight, over Fumadocs' own weights. */
+.yk-root :is(h1, h2, h3, h4) {
+  font-family: var(--yk-font-family-heading);
+  font-weight: var(--yk-font-weight-heading);
+  letter-spacing: -0.02em;
+}
+
+/* Code blocks (components/code-block.tsx). A file's block has the dock bar with the file as its one, current tab: the
+   editor's colour and the green line, as in Light's focused group. */
+.yk-code > .yk-dock > span.yk-dock-tab {
+  cursor: default;
+  background: var(--yk-code-bg);
+  color: var(--yk-ink);
+  box-shadow: inset 0 -2px 0 var(--yk-accent);
+}
+.yk-code > pre {
+  background: none !important;
+}
+.yk-code > pre > code {
+  display: flex;
+  flex-direction: column;
+  min-width: max-content;
+}
+/* Marked, added and removed lines: a bar and a sign, blue for marked; never colour alone. */
+.yk-code .line.highlighted {
+  background: color-mix(in oklch, var(--yk-info) 12%, transparent);
+}
+.yk-code .line.highlighted::after {
+  border-color: var(--yk-info);
+}
+.yk-code .line.diff.remove {
+  opacity: 1;
+}
+.yk-code .line.diff::after {
+  position: absolute;
+  inset: 0 auto 0 0;
+  content: '';
+  border-left: 2px solid currentColor;
+}
+.yk-code .line.diff.add::after {
+  color: var(--yk-ok);
+}
+.yk-code .line.diff.remove::after {
+  color: var(--yk-danger);
+}
+
+/* A heading's anchor keeps the heading's colour: green is for links in running text. */
+.yk-root :is(h1, h2, h3, h4, h5, h6) > a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The docs (lib/layout.shared.tsx) have the landing page's lifted header. --docs-header-space is the room it takes at
+   the top of the window: the sidebar and the table of contents stick below that, and a heading reached by its anchor
+   lands below it. At 760px and wider the header floats 12px below the window's top, the margin base.css gives it;
+   below 760px it is the full-width bar. --docs-header-height is the header's own height: DocsHeader measures it and
+   sets it on the root, so a change to the header moves everything with it. The values here are its natural heights,
+   for the prerendered page until the script runs. */
+:root {
+  --docs-header-height: 47px;
+}
+#nd-docs-layout {
+  --docs-header-space: var(--docs-header-height);
+}
+@media (min-width: 760px) {
+  :root {
+    --docs-header-height: 50.92px;
+  }
+  #nd-docs-layout {
+    --docs-header-space: calc(12px + var(--docs-header-height));
+  }
+}
+/* The page scrolls behind the header, through the gap above and beside the lifted bar as on the landing page: the
+   header's row is transparent, and lets clicks through to what shows around the bar. */
+.yk-docs-header {
+  pointer-events: none;
+}
+.yk-docs-header > * {
+  pointer-events: auto;
+}
+/* The sidebar runs the window's full height, its surface and its border up behind the header; its list starts below
+   the header and scrolls there, so no page link ever passes behind the bar. Fumadocs places it in the row under the
+   header, sticking at --fd-docs-row-1: it is pulled up into the header's row and sticks at the top instead. */
+@media (min-width: 768px) {
+  [data-sidebar-placeholder] {
+    top: 0;
+    height: var(--fd-docs-height, 100dvh);
+    margin-top: calc(-1 * var(--docs-header-space));
+  }
+  #nd-sidebar {
+    padding-top: var(--docs-header-space);
+  }
+  /* The strip behind the header, in the sidebar's surface: its children carry the surface, so the rail to their left
+     shows (see below). */
+  #nd-sidebar::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto auto;
+    width: var(--fd-sidebar-width);
+    height: var(--docs-header-space);
+    background: var(--yk-surface);
+  }
+}
+#nd-docs-layout :is(h1, h2, h3, h4, h5, h6)[id] {
+  scroll-margin-top: calc(var(--fd-docs-row-3) + 1.5rem);
+}
+/* The outer columns, beyond the reading width, are the rails: the only place the lattice appears in the docs. */
+#nd-docs-layout::before,
+#nd-docs-layout::after {
+  content: '';
+  grid-row: 1 / -1;
+}
+#nd-docs-layout::before {
+  grid-column: 1;
+}
+#nd-docs-layout::after {
+  grid-column: 5;
+}
+@media (min-width: 768px) {
+  #nd-docs-layout::before,
+  #nd-docs-layout::after {
+    background-color: var(--yk-rail);
+    background-image:
+      linear-gradient(60deg, transparent 49.3%, var(--yk-lattice) 49.3% 50.7%, transparent 50.7%),
+      linear-gradient(-60deg, transparent 49.3%, var(--yk-lattice) 49.3% 50.7%, transparent 50.7%),
+      linear-gradient(0deg, transparent 48%, var(--yk-lattice) 48% 52%, transparent 52%);
+    background-size: 28px 48.5px;
+    background-attachment: fixed;
+  }
+}
+/* The sidebar is its own column only, so the rail to its left shows. */
+#nd-sidebar {
+  background: none;
+}
+#nd-sidebar > * {
+  background: var(--yk-surface);
+}
+/* The current page: a grey fill and bold, not a coloured bar or green text; in the sidebar and in the phone's drawer. */
+:is(#nd-sidebar, #nd-sidebar-mobile) a[data-active='true'] {
+  background: var(--yk-sunken);
+  color: var(--yk-ink);
+  font-weight: var(--yk-font-weight-bold);
+}
+/* The sidebar's footer. Fumadocs draws the icon links and the theme switch in one bordered tray, the switch at its end;
+   the links are in the header here, so the tray held the switch beside an empty box. Without links the tray is not
+   drawn, and the switch at its end is the one the phone's drawer shows: a rounded pill with its own border. */
+#nd-sidebar div:has(> [data-theme-toggle]):not(:has(> a)) {
+  justify-content: flex-end;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+#nd-sidebar div:not(:has(> a)) > [data-theme-toggle] {
+  padding: 0;
+  border-width: 1px;
+  border-radius: 9999px;
+}
+#nd-sidebar div:not(:has(> a)) > [data-theme-toggle] > * {
+  border-radius: 9999px;
+}
+/* Tabs in a page: the current one's line is the accent, 2px. */
+.yk-root [role='tab'][data-active] {
+  border-color: var(--yk-accent);
+  box-shadow: inset 0 -1px 0 var(--yk-accent);
+}
+
+/* The ink ring on Fumadocs' own controls. Their Tailwind utilities, focus-visible:outline-none with a box-shadow ring
+   (Copy Markdown, Open, Copy Anchor Link) or outline-none (a tab's panel), sit in the utilities layer and beat the design
+   system's ring, which is in the components layer. These rules are unlayered, so they win; they match only elements
+   carrying those utilities or Fumadocs' tabs, so the design system's own controls keep their rings and offsets. A
+   field keeps its own focus. */
+.yk-root :is([class*='focus-visible:ring'], [class*='outline-none']):not(input, textarea):focus-visible {
+  outline: var(--yk-focus-width) solid var(--yk-ink);
+  outline-offset: var(--yk-focus-offset);
+  box-shadow: none;
+}
+/* Fumadocs' tabs and table of contents: the row of tabs and the contents' list scroll, and a tab's panel sits in a frame
+   that clips, so a ring drawn outside would be cut off; it is drawn inside, as on the design system's tabs. A tab has
+   no padding of its own, so while focused it gets room for the ring, taken back by its margin: nothing moves. */
+.yk-root :is([role='tab'], [role='tabpanel']):not([class*='yk-']):focus-visible,
+#nd-toc a:focus-visible {
+  outline: var(--yk-focus-width) solid var(--yk-ink);
+  outline-offset: calc(-1 * var(--yk-focus-width));
+}
+.yk-root [role='tab']:not([class*='yk-']):focus-visible {
+  margin-inline: calc(-2 * var(--yk-focus-width));
+  padding-inline: calc(2 * var(--yk-focus-width));
+}
+/* Tailwind's transition-colors, on many of Fumadocs' controls, also fades the outline's colour: a focused link's ring
+   faded in from its grey text colour. Every outline is the ink before focus too, so the ring is the ink at once. In
+   the base layer, so the design system's and Tailwind's own outline colours still win. */
+@layer base {
+  .yk-root * {
+    outline-color: var(--yk-ink);
+  }
+}
+
+/* The landing page (routes/home.tsx): its lifted header is exactly as wide as its content. One width does both, the
+   design system's --yk-layout-header-max. The header's border box is at most that wide; each section is that wide plus
+   its px-4 padding, so its text edges fall where the header's border does. On a narrower window both keep the same 1rem
+   gutter at either side: the body is a flex column, which would shrink the auto-margined header to fit its content, so
+   it is given the full width less the sections' padding. Below 760px it is the full-width bar again. */
+:root {
+  --landing-width: calc(var(--yk-layout-header-max) + 2rem);
+}
+@media (min-width: 760px) {
+  .yk-header--float {
+    width: calc(100% - 2rem);
+  }
+}
+/* The search box's shortcut stays on one line, and is left out where the box is too narrow for it (about 760 to 800px
+   wide windows), instead of wrapping and making the header taller. */
+.yk-search {
+  container-type: inline-size;
+}
+.yk-search kbd {
+  white-space: nowrap;
+}
+@container (max-width: 139.98px) {
+  .yk-search kbd {
+    display: none;
+  }
+}
+
+/* The site menu (components/site-header.tsx): below 760px only, where the header hides its sections and search. A
+   popover on the surface with a hairline, at the window's right gutter; its top is set from the header as it opens. */
+@media (min-width: 760px) {
+  .yk-site-menu-btn {
+    display: none;
+  }
+}
+.yk-site-menu {
+  position: fixed;
+  inset: auto 16px auto auto;
+  margin: 0;
+  min-width: 200px;
+  padding: 6px;
+  border: 1px solid var(--yk-line);
+  border-radius: var(--yk-radius-lg);
+  background: var(--yk-surface);
+  color: var(--yk-ink);
+  box-shadow: 0 12px 32px -16px light-dark(color-mix(in oklch, var(--yk-ink) 40%, transparent), #000);
+}
+.yk-site-menu nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.yk-site-menu :is(a, button) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--yk-radius-md);
+  background: none;
+  color: var(--yk-ink);
+  font: inherit;
+  font-size: 14px;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+}
+.yk-site-menu :is(a, button):hover {
+  background: var(--yk-sunken);
+}
+.yk-site-menu :is(a, button):focus-visible {
+  outline-offset: calc(-1 * var(--yk-focus-width));
+}
+.yk-site-menu button {
+  border-top: 1px solid var(--yk-line);
+  border-radius: 0 0 var(--yk-radius-md) var(--yk-radius-md);
+  margin-top: 2px;
+  padding-top: 10px;
 }

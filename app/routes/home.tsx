@@ -1,8 +1,8 @@
-import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import { Link } from 'react-router';
-import { BookOpenCheck, Bot, CloudUpload, Download, GraduationCap, Layers, ShieldCheck, Sprout } from 'lucide-react';
-import { baseOptions } from '@/lib/layout.shared';
-import { releasesUrl, siteUrl } from '@/lib/shared';
+import { BookOpenCheck, Bot, CloudUpload, GraduationCap, Layers, ShieldCheck, Sprout } from 'lucide-react';
+import { Hero } from '@/components/hero';
+import { SiteHeader } from '@/components/site-header';
+import { siteUrl } from '@/lib/shared';
 
 const description =
   'Yukibana is an IDE for education. Teachers choose, exercise by exercise, which tools students see, and hand out and collect assignments through Yukibana Cloud.';
@@ -53,92 +53,56 @@ const features = [
 
 export default function Home() {
   return (
-    <HomeLayout {...baseOptions()}>
+    <>
+      <SiteHeader float />
       <main className="flex flex-1 flex-col">
-        <section className="relative overflow-hidden border-b">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-60 [background:radial-gradient(40rem_20rem_at_15%_10%,var(--yb-pink),transparent),radial-gradient(40rem_20rem_at_85%_0%,var(--yb-blue),transparent),radial-gradient(30rem_20rem_at_50%_100%,var(--yb-yellow),transparent)]"
-          />
-          <div className="relative mx-auto flex max-w-5xl flex-col items-center px-4 py-20 text-center md:py-28">
-            <img src="/logo.svg" alt="" width={112} height={112} className="mb-8 size-28" />
-            <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-6xl">An IDE for education</h1>
-            <p className="mb-8 max-w-2xl text-lg text-fd-muted-foreground md:text-xl">
-              Give students exactly the tools each exercise calls for, and hand out and collect assignments without a
-              single zip file.
-            </p>
-            <div className="flex flex-wrap justify-center gap-3">
-              <Link
-                to="/docs"
-                className="rounded-full bg-fd-primary px-5 py-2.5 text-sm font-medium text-fd-primary-foreground transition-opacity hover:opacity-90"
-              >
-                Read the docs
-              </Link>
-              <a
-                href={releasesUrl}
-                className="inline-flex items-center gap-2 rounded-full border bg-fd-background px-5 py-2.5 text-sm font-medium transition-colors hover:bg-fd-accent"
-              >
-                <Download className="size-4" />
-                Download
-              </a>
-            </div>
-          </div>
-        </section>
+        <Hero />
 
-        <section className="mx-auto w-full max-w-5xl px-4 py-16">
-          <h2 className="mb-2 text-2xl font-semibold">Why Yukibana?</h2>
-          <p className="mb-10 max-w-3xl text-fd-muted-foreground">
+        <section className="mx-auto w-full max-w-(--landing-width) px-4 py-16">
+          <h2 className="mb-2 text-(length:--yk-font-size-xl)">Why Yukibana?</h2>
+          <p className="mb-10 max-w-3xl text-(--yk-soft)">
             Professional IDEs are built to make experts fast. For a beginner, the same help can do the thinking for
             them, and the setup can take the first week. Yukibana puts fruitful friction back where it helps learning,
-            and removes the sterile friction that does not.{' '}
-            <Link to="/docs/why" className="font-medium text-fd-foreground underline underline-offset-4">
-              Read more
-            </Link>
+            and removes the sterile friction that does not. <Link to="/docs/why">Read more</Link>
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {features.map(({ icon: Icon, title, body }) => (
-              <div key={title} className="rounded-xl border bg-fd-card p-5">
-                <Icon className="mb-3 size-5 text-fd-primary" />
-                <h3 className="mb-1 font-medium">{title}</h3>
-                <p className="text-sm text-fd-muted-foreground">{body}</p>
+              <div key={title} className="rounded-(--yk-radius-lg) border border-(--yk-line) bg-(--yk-surface) p-5">
+                <Icon className="mb-3 size-5 text-(--yk-soft)" strokeWidth={1.5} aria-hidden />
+                <h3 className="mb-1 text-base">{title}</h3>
+                <p className="text-sm text-(--yk-soft)">{body}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="border-t bg-fd-secondary/40">
-          <div className="mx-auto grid w-full max-w-5xl gap-4 px-4 py-16 md:grid-cols-2">
+        <section className="border-t border-(--yk-line)">
+          <div className="mx-auto grid w-full max-w-(--landing-width) gap-4 px-4 py-16 md:grid-cols-2">
             <Link
               to="/docs/getting-started/students"
-              className="rounded-xl border bg-fd-card p-6 transition-colors hover:bg-fd-accent"
+              className="rounded-(--yk-radius-lg) border border-(--yk-line) bg-(--yk-surface) p-6 transition-colors duration-(--yk-motion-fast) hover:bg-(--yk-sunken)"
             >
-              <GraduationCap className="mb-3 size-6 text-fd-primary" />
-              <h3 className="mb-1 text-lg font-medium">I am a student</h3>
-              <p className="text-sm text-fd-muted-foreground">
-                Open an exercise from the cloud, work on it, and hand it in.
-              </p>
+              <GraduationCap className="mb-3 size-6 text-(--yk-soft)" strokeWidth={1.5} aria-hidden />
+              <h3 className="mb-1 text-lg">I am a student</h3>
+              <p className="text-sm text-(--yk-soft)">Open an exercise from the cloud, work on it, and hand it in.</p>
             </Link>
             <Link
               to="/docs/getting-started/teachers"
-              className="rounded-xl border bg-fd-card p-6 transition-colors hover:bg-fd-accent"
+              className="rounded-(--yk-radius-lg) border border-(--yk-line) bg-(--yk-surface) p-6 transition-colors duration-(--yk-motion-fast) hover:bg-(--yk-sunken)"
             >
-              <BookOpenCheck className="mb-3 size-6 text-fd-primary" />
-              <h3 className="mb-1 text-lg font-medium">I am a teacher</h3>
-              <p className="text-sm text-fd-muted-foreground">
+              <BookOpenCheck className="mb-3 size-6 text-(--yk-soft)" strokeWidth={1.5} aria-hidden />
+              <h3 className="mb-1 text-lg">I am a teacher</h3>
+              <p className="text-sm text-(--yk-soft)">
                 Turn a course repository into an exercise, set its dates, and collect submissions ready to grade.
               </p>
             </Link>
           </div>
         </section>
-
-        <footer className="border-t px-4 py-8 text-center text-sm text-fd-muted-foreground">
-          Yukibana is open source and developed at the{' '}
-          <a href="https://www.hevs.ch/" className="underline underline-offset-4">
-            HES-SO Valais/Wallis
-          </a>
-          .
-        </footer>
       </main>
-    </HomeLayout>
+      {/* After <main>, so it is the page's footer landmark (contentinfo). */}
+      <footer className="border-t border-(--yk-line) px-4 py-8 text-center text-sm text-(--yk-soft)">
+        Yukibana is open source and developed at the <a href="https://www.hevs.ch/">HES-SO Valais/Wallis</a>.
+      </footer>
+    </>
   );
 }

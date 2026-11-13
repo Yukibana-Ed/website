@@ -9,7 +9,7 @@ import {
   ViewOptionsPopover,
 } from 'fumadocs-ui/layouts/docs/page';
 import { docs, source } from '@/lib/source';
-import { baseOptions } from '@/lib/layout.shared';
+import { docsOptions } from '@/lib/layout.shared';
 import { useFumadocsLoader } from 'fumadocs-core/source/client';
 import { useMDXComponents } from '@/components/mdx';
 import { use } from 'react';
@@ -61,7 +61,7 @@ export default function Page({ loaderData }: Route.ComponentProps) {
   const { path, pageTree, imagePath, markdownUrl } = useFumadocsLoader(loaderData);
 
   return (
-    <DocsLayout {...baseOptions()} tree={pageTree}>
+    <DocsLayout {...docsOptions()} tree={pageTree}>
       <Content path={path} markdownUrl={markdownUrl} imagePath={imagePath} />
     </DocsLayout>
   );
