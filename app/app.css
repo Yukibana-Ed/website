@@ -216,6 +216,23 @@ samp {
   color: var(--yk-ink);
   font-weight: var(--yk-font-weight-bold);
 }
+/* The sidebar's footer. Fumadocs draws the icon links and the theme switch in one bordered tray, the switch at its end;
+   the links are in the header here, so the tray held the switch beside an empty box. Without links the tray is not
+   drawn, and the switch at its end is the one the phone's drawer shows: a rounded pill with its own border. */
+#nd-sidebar div:has(> [data-theme-toggle]):not(:has(> a)) {
+  justify-content: flex-end;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+#nd-sidebar div:not(:has(> a)) > [data-theme-toggle] {
+  padding: 0;
+  border-width: 1px;
+  border-radius: 9999px;
+}
+#nd-sidebar div:not(:has(> a)) > [data-theme-toggle] > * {
+  border-radius: 9999px;
+}
 /* Tabs in a page: the current one's line is the accent, 2px. */
 .yk-root [role='tab'][data-active] {
   border-color: var(--yk-accent);
