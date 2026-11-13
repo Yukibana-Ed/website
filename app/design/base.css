@@ -65,15 +65,16 @@
     background: var(--yk-accent);
     color: var(--yk-on-accent);
 }
-.yk-btn--primary:hover {
+/* Hover only where a click would do something: a disabled button stays as it is. */
+.yk-btn--primary:hover:not(:disabled) {
     background: var(--yk-accent-strong);
 }
 .yk-btn--secondary {
     background: var(--yk-surface);
     border-color: var(--yk-line-strong);
 }
-.yk-btn--secondary:hover,
-.yk-btn--ghost:hover {
+.yk-btn--secondary:hover:not(:disabled),
+.yk-btn--ghost:hover:not(:disabled) {
     background: var(--yk-sunken);
 }
 .yk-btn--ghost {
@@ -82,6 +83,11 @@
 .yk-btn--danger {
     background: var(--yk-danger);
     color: var(--yk-on-accent);
+}
+/* No token of its own: the red moves a step towards ink, darker in the light theme and lighter in the dark, as the
+   primary's hover does, so its label only gains contrast. Mixed in OKLab, where mixing in a grey does not turn the hue. */
+.yk-btn--danger:hover:not(:disabled) {
+    background: color-mix(in oklab, var(--yk-danger) 85%, var(--yk-ink));
 }
 .yk-btn:disabled {
     opacity: 0.45;
@@ -226,7 +232,9 @@
     background: var(--yk-accent);
     border-color: var(--yk-accent);
 }
-.yk-check:checked::after {
+/* A box can be checked and indeterminate at once (a script sets both); the dash wins, so the tick is drawn only when the
+   box is not indeterminate. */
+.yk-check:checked:not(:indeterminate)::after {
     content: '';
     width: 9px;
     height: 5px;
@@ -293,6 +301,11 @@
     font-weight: var(--yk-font-weight-bold);
     box-shadow: inset 0 -2px 0 var(--yk-accent);
 }
+/* The ring goes inside the tab: an app may let the row scroll sideways (the cloud does on a phone), and a scrolling box
+   cuts off whatever sticks out of it. */
+.yk-tabs > a:focus-visible {
+    outline-offset: calc(-1 * var(--yk-focus-width));
+}
 
 /* Light's dock tab bar, also above code in the docs: a bar a little darker than the editor, short dividers, the current
    tab filled with the editor's colour and a full 2px line, green in the focused group and grey in the others. */
@@ -336,6 +349,10 @@
 .yk-dock > .yk-dock-tab[aria-selected='true']::before,
 .yk-dock > .yk-dock-tab[aria-selected='true'] + .yk-dock-tab::before {
     opacity: 0;
+}
+/* Inside the tab, since .yk-code clips what sticks out of its rounded frame. */
+.yk-dock > .yk-dock-tab:focus-visible {
+    outline-offset: calc(-2 * var(--yk-focus-width));
 }
 .yk-dock > .yk-dock-actions {
     margin-left: auto;
@@ -422,13 +439,21 @@
     opacity: 0;
     transition: opacity var(--yk-motion-fast);
 }
+/* Shown on hover, while the keyboard is in the block, and always on a touch screen, which has no hover to reveal it. */
 .yk-code--terminal:hover > .yk-icon-btn,
-.yk-code--terminal > .yk-icon-btn:focus-visible {
+.yk-code--terminal:focus-within > .yk-icon-btn {
     opacity: 1;
+}
+@media (hover: none) {
+    .yk-code--terminal > .yk-icon-btn {
+        opacity: 1;
+    }
 }
 
 /* Messages: one family. Success is the dark pill and fades after --yk-motion-toast; an error is the same pill in red and
-   stays until it is retried or dismissed. One line, bottom centre. */
+   stays until it is retried or dismissed. One line, bottom centre. The text goes in a <span>: on a narrow screen it is
+   the part that gives way, ending in an ellipsis, so the icon and the buttons always stay. The pill is at most the
+   viewport less 16px each side, padding included. */
 .yk-toast {
     position: fixed;
     left: 50%;
@@ -437,6 +462,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    box-sizing: border-box;
     width: max-content;
     max-width: calc(100vw - 32px);
     padding: 8px 14px 8px 16px;
@@ -447,6 +473,14 @@
     font-weight: var(--yk-font-weight-bold);
     white-space: nowrap;
     box-shadow: 0 12px 30px -16px oklch(0% 0 0 / 0.6);
+}
+.yk-toast > :is(svg, button) {
+    flex: none;
+}
+.yk-toast > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .yk-toast--error {
     background: var(--yk-danger);
@@ -461,6 +495,11 @@
     cursor: pointer;
     text-decoration: underline;
     text-underline-offset: 2px;
+}
+/* The ink ring would vanish on the success pill, which is ink, and is faint on the red one: here the ring is the pill's
+   own text colour, which reads on it by construction. The pill's padding leaves room for it. */
+.yk-toast :focus-visible {
+    outline-color: currentColor;
 }
 
 /* Waiting: skeleton rows where content is coming. The spinner only ever sits inside a button that is working, in the
@@ -669,9 +708,14 @@
         background: var(--yk-surface);
     }
 }
+/* Every child stays on the first row. With the <nav> hidden, the brand and the end fill the two columns; a header with
+   another middle child (the cloud's is an empty <div>) gets a third, auto column for the end instead of a second row. */
 @media (max-width: 759.98px) {
     .yk-header {
         grid-template-columns: auto 1fr;
+    }
+    .yk-header > * {
+        grid-row: 1;
     }
     .yk-header nav,
     .yk-header .yk-search {
