@@ -101,11 +101,11 @@ export default function Home() {
             </Link>
           </div>
         </section>
-
-        <footer className="border-t border-(--yk-line) px-4 py-8 text-center text-sm text-(--yk-soft)">
-          Yukibana is open source and developed at the <a href="https://www.hevs.ch/">HES-SO Valais/Wallis</a>.
-        </footer>
       </main>
+      {/* After <main>, so it is the page's footer landmark (contentinfo). */}
+      <footer className="border-t border-(--yk-line) px-4 py-8 text-center text-sm text-(--yk-soft)">
+        Yukibana is open source and developed at the <a href="https://www.hevs.ch/">HES-SO Valais/Wallis</a>.
+      </footer>
       {hero.switcher && <HeroSwitcher current={hero.id} onChoose={hero.choose} />}
     </>
   );
