@@ -6,8 +6,8 @@ const store = createVariantStore({ param: 'bar', storageKey: 'yk-header-bar', va
 
 /**
  * Applies the chosen material to the lifted header bar on every page, as data-bar on <html> (bar-variants.css), and
- * shows the review switcher where it is enabled. 8, "Grain frost", is the default: root.tsx renders it into the
- * page, so the prerendered HTML has it before this runs. 1, base.css's bar, sets nothing. "Clears at the top" also marks
+ * shows the review switcher where it is enabled. 8, "Grain frost", is the default and is design/base.css's own
+ * bar, so it sets nothing and the prerendered HTML has it before this runs. "Clears at the top" also marks
  * <html> with data-bar-scrolled once the page is scrolled.
  */
 export function BarVariants() {
@@ -15,7 +15,7 @@ export function BarVariants() {
 
   useEffect(() => {
     const root = document.documentElement;
-    if (id === '1') delete root.dataset.bar;
+    if (id === '8') delete root.dataset.bar;
     else root.dataset.bar = id;
     if (id !== '10') return;
     const onScroll = () => {

@@ -1,5 +1,5 @@
-/* The lifted header bar's materials under review (variants.ts); 1, "Current", is design/base.css's and sets nothing
-   here. Each variant fills four properties of the bar, one section each, tuned separately for the light and dark
+/* The lifted header bar's materials under review (variants.ts); 8, "Grain frost", is design/base.css's and sets
+   nothing here. Each variant fills four properties of the bar, one section each, tuned separately for the light and dark
    themes: light-dark() for colours, `:root.dark` for the backdrop filter, which light-dark() cannot reach. Only the
    material changes: the bar's layout and size are base.css's.
 
@@ -35,6 +35,16 @@
   :root[data-bar] .yk-header--float {
     background: var(--bar-solid, var(--yk-surface));
   }
+}
+
+/* 1, "Plain frost": the lifted bar as it was before Grain frost moved into the package: 82% surface, a 14px blur,
+   saturate 1.4; the hairline and the shadow. 8, "Grain frost", is now the package's own bar and sets nothing here. */
+:root[data-bar='1'] .yk-header--float {
+  --bar-bg: color-mix(in oklch, var(--yk-surface) 82%, transparent);
+  --bar-filter: blur(14px) saturate(1.4);
+  --bar-border: var(--yk-line);
+  --bar-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--yk-surface) 60%, transparent), 0 10px 30px -18px var(--bar-shade);
 }
 
 /* 2, "Nearly opaque": 95% surface, a light 6px blur, saturate 1.2; the current hairline and shadow. */
@@ -114,18 +124,6 @@
   --bar-bg: color-mix(in oklch, color-mix(in oklch, var(--yk-surface) 93%, var(--yk-accent)) 80%, transparent);
   --bar-filter: blur(14px) saturate(1.4);
   --bar-border: color-mix(in oklch, var(--yk-line) 75%, var(--yk-accent));
-  --bar-shadow:
-    inset 0 1px 0 color-mix(in oklch, var(--yk-surface) 60%, transparent), 0 10px 30px -18px var(--bar-shade);
-}
-
-/* 8, "Grain frost": 72% surface, an 18px blur, saturate 1.5, and a fine grey grain over it (an inline SVG noise at 7%
-   opacity, the same in both themes); the hairline and the shadow. */
-:root[data-bar='8'] .yk-header--float {
-  --bar-bg:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E"),
-    color-mix(in oklch, var(--yk-surface) 72%, transparent);
-  --bar-filter: blur(18px) saturate(1.5);
-  --bar-border: var(--yk-line);
   --bar-shadow:
     inset 0 1px 0 color-mix(in oklch, var(--yk-surface) 60%, transparent), 0 10px 30px -18px var(--bar-shade);
 }
