@@ -24,8 +24,10 @@ export function CodeBlock({
   if (!title) {
     return (
       <figure className="yk-code yk-code--terminal shiki not-prose my-4" dir="ltr">
-        {copy}
         {pre}
+        {/* After the code, so it paints above it: Fumadocs makes each .line `position: relative`, and a line drawn
+            later than the button covered its middle, so hovering the icon itself lost the hover. */}
+        {copy}
       </figure>
     );
   }
