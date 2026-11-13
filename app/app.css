@@ -119,10 +119,30 @@ samp {
   text-decoration: none;
 }
 
-/* The docs (lib/layout.shared.tsx). The header has a fixed height, which the sidebar and the table of contents stick
-   below. */
+/* The docs (lib/layout.shared.tsx) have the landing page's lifted header. It is given a fixed height, its natural one,
+   so that --docs-header-space, the room it takes at the top of the window, is known: the sidebar and the table of
+   contents stick below that, and a heading reached by its anchor lands below it. At 760px and wider the header floats
+   12px below the window's top, the margin base.css gives it; below 760px it is the full-width bar. */
+#nd-docs-layout {
+  --docs-header-height: 48px;
+  --docs-header-space: var(--docs-header-height);
+}
 #nd-docs-layout .yk-header {
-  height: 48px;
+  height: var(--docs-header-height);
+}
+@media (min-width: 760px) {
+  #nd-docs-layout {
+    --docs-header-height: 51px;
+    --docs-header-space: calc(12px + var(--docs-header-height));
+  }
+  /* The page scrolls under the header's row, not through the gap above and beside the header: the row is the page's
+     background, as at the top of the page, so the sidebar, the rails and the text all stop at the same line. */
+  .yk-docs-header {
+    background: var(--yk-bg);
+  }
+}
+#nd-docs-layout :is(h1, h2, h3, h4, h5, h6)[id] {
+  scroll-margin-top: calc(var(--fd-docs-row-3) + 1.5rem);
 }
 /* The outer columns, beyond the reading width, are the rails: the only place the lattice appears in the docs. */
 #nd-docs-layout::before,
@@ -178,5 +198,18 @@ samp {
 @media (min-width: 760px) {
   .yk-header--float {
     width: calc(100% - 2rem);
+  }
+}
+/* The search box's shortcut stays on one line, and is left out where the box is too narrow for it (about 760 to 800px
+   wide windows), instead of wrapping and making the header taller. */
+.yk-search {
+  container-type: inline-size;
+}
+.yk-search kbd {
+  white-space: nowrap;
+}
+@container (max-width: 139.98px) {
+  .yk-search kbd {
+    display: none;
   }
 }

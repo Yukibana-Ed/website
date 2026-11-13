@@ -8,7 +8,7 @@ export function meta() {
 export default function NotFound() {
   return (
     <>
-      <SiteHeader />
+      <SiteHeader float />
       <main className="yk-empty flex-1 content-center">
         <h1 className="m-0 text-2xl">Page not found</h1>
         <p>There is nothing at this address. It may have moved.</p>
