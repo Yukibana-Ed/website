@@ -170,8 +170,8 @@ importers:
         specifier: ^8.5.1
         version: 8.5.1(react-router@8.5.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(typescript@7.0.2)
       '@yukibana/design':
-        specifier: github:tothambrus11/Yukibana#7238f4b27983dcc3bb52b0eade17d8e61c6272c9&path:packages/design
-        version: https://codeload.github.com/tothambrus11/Yukibana/tar.gz/7238f4b27983dcc3bb52b0eade17d8e61c6272c9#path:packages/design
+        specifier: github:tothambrus11/Yukibana#0f6b8fa128b0836a07d40112ec80a1aab1e4df1b&path:packages/design
+        version: https://codeload.github.com/tothambrus11/Yukibana/tar.gz/0f6b8fa128b0836a07d40112ec80a1aab1e4df1b#path:packages/design
       cn:
         specifier: ^0.5.2
         version: 0.5.2
@@ -1851,8 +1851,8 @@ packages:
   '@ungap/structured-clone@1.4.0':
     resolution: {integrity: sha512-1mEZtMKPM09vDmQt5y7YvmN2+DFTP7Tg0EWXdic8/C6VRnpb33e4ghisCIE3WZjsE2N8mf+QV1Zqh7ZFYLWInQ==}
 
-  '@yukibana/design@https://codeload.github.com/tothambrus11/Yukibana/tar.gz/7238f4b27983dcc3bb52b0eade17d8e61c6272c9#path:packages/design':
-    resolution: {gitHosted: true, integrity: sha512-IS+FxHXXUmm9twbcozOyXXvtTaWI5gfZLk90SqJ+m2uTbFpSvEydHB2zb8DlYKav5hcxPlyr6NQEC9WcHdCDPg==, path: packages/design, tarball: https://codeload.github.com/tothambrus11/Yukibana/tar.gz/7238f4b27983dcc3bb52b0eade17d8e61c6272c9}
+  '@yukibana/design@https://codeload.github.com/tothambrus11/Yukibana/tar.gz/0f6b8fa128b0836a07d40112ec80a1aab1e4df1b#path:packages/design':
+    resolution: {gitHosted: true, integrity: sha512-0nnNcSaWWJ4sJV4PVmAxzsM6rWrWOijvsqtTTyVXTIsSKSjc5DK0VgOVXU6x6mAAA0YtZiFS3T9fswmwiGoSLQ==, path: packages/design, tarball: https://codeload.github.com/tothambrus11/Yukibana/tar.gz/0f6b8fa128b0836a07d40112ec80a1aab1e4df1b}
     version: 0.0.0-dev
 
   '@yuku-core/binding-android-arm64@0.19.0':
@@ -4851,7 +4851,7 @@ snapshots:
 
   '@ungap/structured-clone@1.4.0': {}
 
-  '@yukibana/design@https://codeload.github.com/tothambrus11/Yukibana/tar.gz/7238f4b27983dcc3bb52b0eade17d8e61c6272c9#path:packages/design': {}
+  '@yukibana/design@https://codeload.github.com/tothambrus11/Yukibana/tar.gz/0f6b8fa128b0836a07d40112ec80a1aab1e4df1b#path:packages/design': {}
 
   '@yuku-core/binding-android-arm64@0.19.0':
     optional: true
