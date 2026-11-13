@@ -2,11 +2,12 @@ import { useEffect } from 'react';
 import { createVariantStore, VariantSwitcher } from '@/components/variant-switcher';
 import { barVariants } from './variants';
 
-const store = createVariantStore({ param: 'bar', storageKey: 'yk-header-bar', variants: barVariants, fallback: '1' });
+const store = createVariantStore({ param: 'bar', storageKey: 'yk-header-bar', variants: barVariants, fallback: '8' });
 
 /**
  * Applies the chosen material to the lifted header bar on every page, as data-bar on <html> (bar-variants.css), and
- * shows the review switcher where it is enabled. 1, the current bar, sets nothing. "Clears at the top" also marks
+ * shows the review switcher where it is enabled. 8, "Grain frost", is the default: root.tsx renders it into the
+ * page, so the prerendered HTML has it before this runs. 1, base.css's bar, sets nothing. "Clears at the top" also marks
  * <html> with data-bar-scrolled once the page is scrolled.
  */
 export function BarVariants() {
