@@ -1,11 +1,16 @@
 import { llms, loader } from 'fumadocs-core/source';
 import { defineDocs } from 'fumadocs-mdx/macro';
+import { applyMdxPreset } from 'fumadocs-mdx/config';
+import { ykShikiTheme } from './shiki-theme';
 import { docsRoute } from './shared';
 
 export const docs = defineDocs({
   dir: 'content/docs',
   docs: {
     async: true,
+    mdxOptions: applyMdxPreset({
+      rehypeCodeOptions: { themes: { light: ykShikiTheme, dark: ykShikiTheme } },
+    }),
     postprocess: {
       includeProcessedMarkdown: true,
     },

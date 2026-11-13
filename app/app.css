@@ -1,26 +1,55 @@
 @import 'tailwindcss';
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
+/* Yukibana's design system, copied from @yukibana/design (see design/README.md). The shared components sit in the
+   components layer, so a Tailwind utility on the same element still wins. */
+@import './design/tokens.css';
+@import './design/base.css' layer(components);
 
-/* The logo's five petals. */
-:root {
-  --yb-yellow: #f7f19f;
-  --yb-pink: #e2abba;
-  --yb-purple: #a890c0;
-  --yb-teal: #98c7bf;
-  --yb-blue: #8cc6e6;
-  --color-fd-primary: #6e4f9a;
-  --color-fd-primary-foreground: #ffffff;
+/* The theme switch sets class="light" or "dark" on <html>; the tokens follow color-scheme. */
+html.light {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
 }
 
-.dark {
-  --yb-yellow: #4a4520;
-  --yb-pink: #4a2a35;
-  --yb-purple: #3a2d4d;
-  --yb-teal: #23403b;
-  --yb-blue: #1f3e50;
-  --color-fd-primary: #c4b0dc;
-  --color-fd-primary-foreground: #1b1324;
+/* Fumadocs' colours, drawn from the tokens. light-dark() inside each token does the theme, so .dark needs nothing of
+   its own; it is listed only to win over Fumadocs' own .dark rules. */
+:root,
+.dark,
+.dark #nd-sidebar {
+  --color-fd-background: var(--yk-bg);
+  --color-fd-foreground: var(--yk-ink);
+  --color-fd-muted: var(--yk-sunken);
+  --color-fd-muted-foreground: var(--yk-soft);
+  --color-fd-popover: var(--yk-surface);
+  --color-fd-popover-foreground: var(--yk-ink);
+  --color-fd-card: var(--yk-surface);
+  --color-fd-card-foreground: var(--yk-ink);
+  --color-fd-border: var(--yk-line);
+  /* Fumadocs marks the current page, heading and tab in its primary colour. Those are ink here: green is only for
+     primary buttons, links and the current tab's line. */
+  --color-fd-primary: var(--yk-ink);
+  --color-fd-primary-foreground: var(--yk-bg);
+  --color-fd-secondary: var(--yk-sunken);
+  --color-fd-secondary-foreground: var(--yk-ink);
+  --color-fd-accent: var(--yk-sunken);
+  --color-fd-accent-foreground: var(--yk-ink);
+  --color-fd-ring: var(--yk-ink);
+  --color-fd-info: var(--yk-info);
+  --color-fd-warning: var(--yk-warn);
+  --color-fd-error: var(--yk-danger);
+  --color-fd-success: var(--yk-ok);
+  --color-fd-diff-add: color-mix(in oklch, var(--yk-ok) 13%, transparent);
+  --color-fd-diff-add-symbol: var(--yk-ok);
+  --color-fd-diff-remove: color-mix(in oklch, var(--yk-danger) 11%, transparent);
+  --color-fd-diff-remove-symbol: var(--yk-danger);
+}
+
+@theme {
+  --font-sans: var(--yk-font-family-body);
+  --font-mono: var(--yk-font-family-mono);
 }
 
 html {
@@ -30,4 +59,110 @@ html {
 html > body[data-scroll-locked] {
   margin-right: 0px !important;
   --removed-body-scroll-bar-size: 0px !important;
+}
+
+/* Headings in Bricolage at the heading weight, over Fumadocs' own weights. */
+.yk-root :is(h1, h2, h3, h4) {
+  font-family: var(--yk-font-family-heading);
+  font-weight: var(--yk-font-weight-heading);
+  letter-spacing: -0.02em;
+}
+code,
+kbd,
+pre,
+samp {
+  font-variant-ligatures: none;
+}
+
+/* Code blocks (components/code-block.tsx). A file's block has the dock bar with the file as its one, current tab: the
+   editor's colour and the green line, as in Light's focused group. */
+.yk-dock > figcaption.yk-dock-tab {
+  cursor: default;
+  background: var(--yk-code-bg);
+  color: var(--yk-ink);
+  box-shadow: inset 0 -2px 0 var(--yk-accent);
+}
+.yk-code > pre {
+  background: none !important;
+}
+.yk-code > pre > code {
+  display: flex;
+  flex-direction: column;
+  min-width: max-content;
+}
+/* Marked, added and removed lines: a bar and a sign, blue for marked; never colour alone. */
+.yk-code .line.highlighted {
+  background: color-mix(in oklch, var(--yk-info) 12%, transparent);
+}
+.yk-code .line.highlighted::after {
+  border-color: var(--yk-info);
+}
+.yk-code .line.diff.remove {
+  opacity: 1;
+}
+.yk-code .line.diff::after {
+  position: absolute;
+  inset: 0 auto 0 0;
+  content: '';
+  border-left: 2px solid currentColor;
+}
+.yk-code .line.diff.add::after {
+  color: var(--yk-ok);
+}
+.yk-code .line.diff.remove::after {
+  color: var(--yk-danger);
+}
+
+/* A heading's anchor keeps the heading's colour: green is for links in running text. */
+.yk-root :is(h1, h2, h3, h4, h5, h6) > a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The docs (lib/layout.shared.tsx). The header has a fixed height, which the sidebar and the table of contents stick
+   below. */
+#nd-docs-layout .yk-header {
+  height: 48px;
+}
+/* The outer columns, beyond the reading width, are the rails: the only place the lattice appears in the docs. */
+#nd-docs-layout::before,
+#nd-docs-layout::after {
+  content: '';
+  grid-row: 2 / -1;
+}
+#nd-docs-layout::before {
+  grid-column: 1;
+}
+#nd-docs-layout::after {
+  grid-column: 5;
+}
+@media (min-width: 768px) {
+  #nd-docs-layout::before,
+  #nd-docs-layout::after {
+    background-color: var(--yk-rail);
+    background-image:
+      linear-gradient(60deg, transparent 49.3%, var(--yk-lattice) 49.3% 50.7%, transparent 50.7%),
+      linear-gradient(-60deg, transparent 49.3%, var(--yk-lattice) 49.3% 50.7%, transparent 50.7%),
+      linear-gradient(0deg, transparent 48%, var(--yk-lattice) 48% 52%, transparent 52%);
+    background-size: 28px 48.5px;
+    background-attachment: fixed;
+  }
+}
+/* The sidebar is its own column only, so the rail to its left shows. */
+#nd-sidebar {
+  background: none;
+}
+#nd-sidebar > * {
+  background: var(--yk-surface);
+}
+/* The current page: a grey fill and bold, not a coloured bar or green text. */
+#nd-sidebar a[data-active='true'] {
+  background: var(--yk-sunken);
+  color: var(--yk-ink);
+  font-weight: var(--yk-font-weight-bold);
+}
+/* Tabs in a page: the current one's line is the accent, 2px. */
+.yk-root [role='tab'][data-active] {
+  border-color: var(--yk-accent);
+  box-shadow: inset 0 -1px 0 var(--yk-accent);
 }

@@ -5,6 +5,7 @@
   "ignorePatterns": [
     "content/**",
     "*.md",
+    "app/design/*.css",
     "build/**",
     ".react-router/**",
     ".source/**",

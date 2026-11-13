@@ -17,6 +17,10 @@ pnpm dev            # http://localhost:5173
 Pages are MDX in `content/docs/`. Each folder's `meta.json` orders its pages, and `content/docs/meta.json` the sidebar.
 The landing page is `app/routes/home.tsx`.
 
+The look is Yukibana's design system: its tokens and shared styles are copied into `app/design/` from the
+`@yukibana/design` package in the Yukibana repository (see `app/design/README.md`), and `app/app.css` maps Fumadocs'
+colours onto them.
+
 |                                                    |                                                                                       |
 | -------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | `pnpm dev`                                         | The site with hot reload.                                                             |
