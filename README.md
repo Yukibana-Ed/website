@@ -30,9 +30,9 @@ onto it.
 ## Design system
 
 The tokens, the shared component styles and the fonts come from `@yukibana/design`, which lives in the
-[Yukibana repository](https://github.com/tothambrus11/Yukibana) in `packages/design`. It is a git dependency pinned to
-one commit of that repository (`package.json`), and `app/app.css` imports its `tokens.css`, `fonts.css` and `base.css`.
-The fonts are self-hosted: Vite bundles the package's woff2 files with the site.
+[Yukibana repository](https://github.com/Yukibana-Ed/Yukibana) in `packages/design`. It is a git dependency pinned to
+one commit of that repository's `main` branch (`package.json`), and `app/app.css` imports its `tokens.css`,
+`fonts.css` and `base.css`. The fonts are self-hosted: Vite bundles the package's woff2 files with the site.
 
 To take a newer version of the design:
 
