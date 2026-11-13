@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import { BookOpenCheck, Bot, CloudUpload, GraduationCap, Layers, ShieldCheck, Sprout } from 'lucide-react';
-import { HeroSwitcher, useHeroVariant } from '@/components/hero/hero-switcher';
+import { defaultHero, HeroSwitcher, useHeroVariant } from '@/components/hero/hero-switcher';
 import { heroVariants } from '@/components/hero/variants';
 import { SiteHeader } from '@/components/site-header';
 import { siteUrl } from '@/lib/shared';
@@ -54,7 +54,7 @@ const features = [
 
 export default function Home() {
   const hero = useHeroVariant();
-  const { Hero } = heroVariants.find((v) => v.id === hero.id) ?? heroVariants[0];
+  const { Hero } = heroVariants.find((v) => v.id === hero.id) ?? heroVariants.find((v) => v.id === defaultHero)!;
   return (
     <>
       <SiteHeader float />
