@@ -76,12 +76,6 @@ html > body[data-scroll-locked] {
   font-weight: var(--yk-font-weight-heading);
   letter-spacing: -0.02em;
 }
-code,
-kbd,
-pre,
-samp {
-  font-variant-ligatures: none;
-}
 
 /* Code blocks (components/code-block.tsx). A file's block has the dock bar with the file as its one, current tab: the
    editor's colour and the green line, as in Light's focused group. */
