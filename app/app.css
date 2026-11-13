@@ -166,3 +166,17 @@ samp {
   border-color: var(--yk-accent);
   box-shadow: inset 0 -1px 0 var(--yk-accent);
 }
+
+/* The landing page (routes/home.tsx): its lifted header is exactly as wide as its content. One width does both, the
+   design system's --yk-layout-header-max. The header's border box is at most that wide; each section is that wide plus
+   its px-4 padding, so its text edges fall where the header's border does. On a narrower window both keep the same 1rem
+   gutter at either side: the body is a flex column, which would shrink the auto-margined header to fit its content, so
+   it is given the full width less the sections' padding. Below 760px it is the full-width bar again. */
+:root {
+  --landing-width: calc(var(--yk-layout-header-max) + 2rem);
+}
+@media (min-width: 760px) {
+  .yk-header--float {
+    width: calc(100% - 2rem);
+  }
+}

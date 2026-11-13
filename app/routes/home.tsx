@@ -55,7 +55,7 @@ export default function Home() {
     <>
       <SiteHeader float />
       <main className="flex flex-1 flex-col">
-        <section className="mx-auto grid w-full max-w-5xl items-center gap-10 px-4 pt-14 pb-16 md:grid-cols-[1.1fr_1fr] md:pt-20 md:pb-24">
+        <section className="mx-auto grid w-full max-w-(--landing-width) items-center gap-10 px-4 pt-14 pb-16 md:grid-cols-[1.1fr_1fr] md:pt-20 md:pb-24">
           <div className="max-md:order-2">
             <h1 className="mb-4 text-[40px] leading-[1.05] md:text-(length:--yk-font-size-hero)">
               An IDE for education
@@ -81,7 +81,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-5xl px-4 py-16">
+        <section className="mx-auto w-full max-w-(--landing-width) px-4 py-16">
           <h2 className="mb-2 text-(length:--yk-font-size-xl)">Why Yukibana?</h2>
           <p className="mb-10 max-w-3xl text-(--yk-soft)">
             Professional IDEs are built to make experts fast. For a beginner, the same help can do the thinking for
@@ -100,7 +100,7 @@ export default function Home() {
         </section>
 
         <section className="border-t border-(--yk-line)">
-          <div className="mx-auto grid w-full max-w-5xl gap-4 px-4 py-16 md:grid-cols-2">
+          <div className="mx-auto grid w-full max-w-(--landing-width) gap-4 px-4 py-16 md:grid-cols-2">
             <Link
               to="/docs/getting-started/students"
               className="rounded-(--yk-radius-lg) border border-(--yk-line) bg-(--yk-surface) p-6 transition-colors duration-(--yk-motion-fast) hover:bg-(--yk-sunken)"
