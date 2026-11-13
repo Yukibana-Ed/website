@@ -85,7 +85,7 @@ samp {
 
 /* Code blocks (components/code-block.tsx). A file's block has the dock bar with the file as its one, current tab: the
    editor's colour and the green line, as in Light's focused group. */
-.yk-dock > figcaption.yk-dock-tab {
+.yk-code > .yk-dock > span.yk-dock-tab {
   cursor: default;
   background: var(--yk-code-bg);
   color: var(--yk-ink);

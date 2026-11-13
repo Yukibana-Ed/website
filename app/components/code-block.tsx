@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState, type ComponentProps, type ReactNode, type RefObject } from 'react';
+import { useEffect, useId, useRef, useState, type ComponentProps, type ReactNode, type RefObject } from 'react';
 
 /**
  * A code block as an Expressive Code frame, like hylo-lang.org's: a block with a title (a file) gets Light's dock tab
  * bar with the file as its one tab and Copy at the end; a block without one (a terminal, a snippet) has no header, and
  * Copy appears on hover. Replaces Fumadocs' `pre`, so it receives what its Shiki step passes: the title and the
- * highlighted `<pre>`.
+ * highlighted `<pre>`. The title is the dock's tab, inside the bar rather than directly in the `<figure>`, so it is a
+ * `<span>` that names the figure, not a `<figcaption>`.
  */
 export function CodeBlock({
   title,
@@ -15,6 +16,7 @@ export function CodeBlock({
   ...props
 }: ComponentProps<'pre'> & { title?: ReactNode; icon?: ReactNode }) {
   const ref = useRef<HTMLPreElement>(null);
+  const titleId = useId();
   const pre = (
     <pre ref={ref} {...props} className={className} style={style}>
       {children}
@@ -32,9 +34,11 @@ export function CodeBlock({
     );
   }
   return (
-    <figure className="yk-code shiki not-prose my-4" dir="ltr">
+    <figure className="yk-code shiki not-prose my-4" dir="ltr" aria-labelledby={titleId}>
       <div className="yk-dock">
-        <figcaption className="yk-dock-tab">{title}</figcaption>
+        <span id={titleId} className="yk-dock-tab">
+          {title}
+        </span>
         <span className="yk-dock-actions">{copy}</span>
       </div>
       {pre}
