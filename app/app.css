@@ -135,10 +135,36 @@ samp {
     --docs-header-height: 51px;
     --docs-header-space: calc(12px + var(--docs-header-height));
   }
-  /* The page scrolls under the header's row, not through the gap above and beside the header: the row is the page's
-     background, as at the top of the page, so the sidebar, the rails and the text all stop at the same line. */
-  .yk-docs-header {
-    background: var(--yk-bg);
+}
+/* The page scrolls behind the header, through the gap above and beside the lifted bar as on the landing page: the
+   header's row is transparent, and lets clicks through to what shows around the bar. */
+.yk-docs-header {
+  pointer-events: none;
+}
+.yk-docs-header > * {
+  pointer-events: auto;
+}
+/* The sidebar runs the window's full height, its surface and its border up behind the header; its list starts below
+   the header and scrolls there, so no page link ever passes behind the bar. Fumadocs places it in the row under the
+   header, sticking at --fd-docs-row-1: it is pulled up into the header's row and sticks at the top instead. */
+@media (min-width: 768px) {
+  [data-sidebar-placeholder] {
+    top: 0;
+    height: var(--fd-docs-height, 100dvh);
+    margin-top: calc(-1 * var(--docs-header-space));
+  }
+  #nd-sidebar {
+    padding-top: var(--docs-header-space);
+  }
+  /* The strip behind the header, in the sidebar's surface: its children carry the surface, so the rail to their left
+     shows (see below). */
+  #nd-sidebar::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto auto;
+    width: var(--fd-sidebar-width);
+    height: var(--docs-header-space);
+    background: var(--yk-surface);
   }
 }
 #nd-docs-layout :is(h1, h2, h3, h4, h5, h6)[id] {
@@ -148,7 +174,7 @@ samp {
 #nd-docs-layout::before,
 #nd-docs-layout::after {
   content: '';
-  grid-row: 2 / -1;
+  grid-row: 1 / -1;
 }
 #nd-docs-layout::before {
   grid-column: 1;
