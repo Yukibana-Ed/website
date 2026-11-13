@@ -5,15 +5,7 @@ import './app.css';
 import NotFound from './routes/not-found';
 import StaticSearchDialog from './components/search';
 
-export const links: Route.LinksFunction = () => [
-  { rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' },
-  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-  { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
-  {
-    rel: 'stylesheet',
-    href: 'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400..700;1,400..700&family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=JetBrains+Mono:wght@400;700&display=swap',
-  },
-];
+export const links: Route.LinksFunction = () => [{ rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' }];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
