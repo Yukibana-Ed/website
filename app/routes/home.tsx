@@ -1,7 +1,9 @@
 import { Link } from 'react-router';
-import { BookOpenCheck, Bot, CloudUpload, Download, GraduationCap, Layers, ShieldCheck, Sprout } from 'lucide-react';
+import { BookOpenCheck, Bot, CloudUpload, GraduationCap, Layers, ShieldCheck, Sprout } from 'lucide-react';
+import { HeroSwitcher, useHeroVariant } from '@/components/hero/hero-switcher';
+import { heroVariants } from '@/components/hero/variants';
 import { SiteHeader } from '@/components/site-header';
-import { lightUrl, releasesUrl, siteUrl } from '@/lib/shared';
+import { siteUrl } from '@/lib/shared';
 
 const description =
   'Yukibana is an IDE for education. Teachers choose, exercise by exercise, which tools students see, and hand out and collect assignments through Yukibana Cloud.';
@@ -51,35 +53,13 @@ const features = [
 ];
 
 export default function Home() {
+  const hero = useHeroVariant();
+  const { Hero } = heroVariants.find((v) => v.id === hero.id) ?? heroVariants[0];
   return (
     <>
       <SiteHeader float />
       <main className="flex flex-1 flex-col">
-        <section className="mx-auto grid w-full max-w-(--landing-width) items-center gap-10 px-4 pt-14 pb-16 md:grid-cols-[1.1fr_1fr] md:pt-20 md:pb-24">
-          <div className="max-md:order-2">
-            <h1 className="mb-4 text-[40px] leading-[1.05] md:text-(length:--yk-font-size-hero)">
-              An IDE for education
-            </h1>
-            <p className="mb-8 max-w-xl text-lg text-(--yk-soft)">
-              Give students exactly the tools each exercise calls for, and hand out and collect assignments without a
-              single zip file.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <a href={releasesUrl} className="yk-btn yk-btn--primary px-4 py-2.5 text-[15px]">
-                <Download className="size-4" strokeWidth={1.5} aria-hidden />
-                Download
-              </a>
-              <a href={lightUrl} className="yk-btn yk-btn--secondary px-4 py-2.5 text-[15px]">
-                Try Light in your browser
-              </a>
-            </div>
-          </div>
-          {/* The lattice patch, fading at its edges, and the big logo on it. Nothing to read sits on the lattice. */}
-          <div aria-hidden className="relative grid aspect-[4/3] place-items-center max-md:order-1 max-md:aspect-[2/1]">
-            <div className="yk-lattice absolute inset-0 [mask:radial-gradient(closest-side,#000_55%,transparent)]" />
-            <img src="/logo.svg" alt="" width={200} height={200} className="relative size-32 md:size-52" />
-          </div>
-        </section>
+        <Hero />
 
         <section className="mx-auto w-full max-w-(--landing-width) px-4 py-16">
           <h2 className="mb-2 text-(length:--yk-font-size-xl)">Why Yukibana?</h2>
@@ -126,6 +106,7 @@ export default function Home() {
           Yukibana is open source and developed at the <a href="https://www.hevs.ch/">HES-SO Valais/Wallis</a>.
         </footer>
       </main>
+      {hero.switcher && <HeroSwitcher current={hero.id} onChoose={hero.choose} />}
     </>
   );
 }
