@@ -294,3 +294,55 @@ html > body[data-scroll-locked] {
     display: none;
   }
 }
+
+/* The site menu (components/site-header.tsx): below 760px only, where the header hides its sections and search. A
+   popover on the surface with a hairline, at the window's right gutter; its top is set from the header as it opens. */
+@media (min-width: 760px) {
+  .yk-site-menu-btn {
+    display: none;
+  }
+}
+.yk-site-menu {
+  position: fixed;
+  inset: auto 16px auto auto;
+  margin: 0;
+  min-width: 200px;
+  padding: 6px;
+  border: 1px solid var(--yk-line);
+  border-radius: var(--yk-radius-lg);
+  background: var(--yk-surface);
+  color: var(--yk-ink);
+  box-shadow: 0 12px 32px -16px light-dark(color-mix(in oklch, var(--yk-ink) 40%, transparent), #000);
+}
+.yk-site-menu nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.yk-site-menu :is(a, button) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--yk-radius-md);
+  background: none;
+  color: var(--yk-ink);
+  font: inherit;
+  font-size: 14px;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+}
+.yk-site-menu :is(a, button):hover {
+  background: var(--yk-sunken);
+}
+.yk-site-menu :is(a, button):focus-visible {
+  outline-offset: calc(-1 * var(--yk-focus-width));
+}
+.yk-site-menu button {
+  border-top: 1px solid var(--yk-line);
+  border-radius: 0 0 var(--yk-radius-md) var(--yk-radius-md);
+  margin-top: 2px;
+  padding-top: 10px;
+}
