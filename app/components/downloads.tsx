@@ -169,7 +169,7 @@ export function InstallSteps({ kind }: { kind: InstallerKind }) {
       </>,
       <>
         Yukibana is now in the Start menu, and opens the <code>yukibana://</code> links the cloud uses to open
-        exercises. It updates itself: a new version downloads in the background and is installed when you quit.
+        exercises.
       </>,
     ],
     'mac-arm64': macSteps(file),
@@ -185,8 +185,7 @@ export function InstallSteps({ kind }: { kind: InstallerKind }) {
       </>,
       <>
         Yukibana offers to create a desktop entry and a <code>yukibana</code> command for itself, so that{' '}
-        <code>yukibana://</code> links from the browser open in the IDE. It updates itself: a new version downloads in
-        the background and replaces the AppImage when you quit.
+        <code>yukibana://</code> links from the browser open in the IDE.
       </>,
     ],
     'linux-deb': [
@@ -196,9 +195,6 @@ export function InstallSteps({ kind }: { kind: InstallerKind }) {
       </>,
       <>
         Start Yukibana from your applications menu, or with <code>yukibana</code> in a terminal.
-      </>,
-      <>
-        Yukibana tells you when a new version is out. Download its <code>.deb</code> and install it the same way.
       </>,
     ],
   }[kind];
@@ -225,6 +221,5 @@ function macSteps(file: ReactNode): ReactNode[] {
       If macOS says Yukibana <q>is damaged and can’t be opened</q>, remove the download’s quarantine in Terminal:
       <Command>xattr -dr com.apple.quarantine /Applications/Yukibana.app</Command>
     </>,
-    <>Yukibana tells you when a new version is out. Download it and install it the same way, replacing the old app.</>,
   ];
 }
