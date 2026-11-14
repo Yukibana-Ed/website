@@ -16,19 +16,23 @@
   text-decoration-color: currentColor;
 }
 
-/* The theme switch sets class="light" or "dark" on <html>; the tokens follow color-scheme. */
-html.light {
-  color-scheme: light;
-}
-html.dark {
-  color-scheme: dark;
+/* The theme is data-theme on <html>, which tokens.css follows, set by the design system's theme module (see
+   components/theme-switch.tsx), not Fumadocs' class="dark". Tailwind's dark: variant, which Fumadocs defines on .dark,
+   follows the same: data-theme="dark", or the system's dark scheme unless data-theme="light". */
+@custom-variant dark {
+  &:where([data-theme='dark'], [data-theme='dark'] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme='light']), :root:not([data-theme='light']) *) {
+      @slot;
+    }
+  }
 }
 
-/* Fumadocs' colours, drawn from the tokens. light-dark() inside each token does the theme, so .dark needs nothing of
-   its own; it is listed only to win over Fumadocs' own .dark rules. */
-:root,
-.dark,
-.dark #nd-sidebar {
+/* Fumadocs' colours, drawn from the tokens. light-dark() inside each token does the theme, so no theme needs a rule of
+   its own (and Fumadocs' .dark rules never apply: nothing sets that class). */
+:root {
   --color-fd-background: var(--yk-bg);
   --color-fd-foreground: var(--yk-ink);
   --color-fd-muted: var(--yk-sunken);
