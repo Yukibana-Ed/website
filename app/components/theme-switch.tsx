@@ -1,37 +1,32 @@
 import { useSyncExternalStore } from 'react';
-import { flushSync } from 'react-dom';
 import { Monitor, Moon, Sun, type LucideIcon } from 'lucide-react';
-import { THEMES, applyTheme, readTheme, writeTheme, type Theme } from '@yukibana/design/theme';
+import { THEMES, chooseTheme, readTheme, type Theme } from '@yukibana/design/theme';
 import { cn } from '@/lib/cn';
 
 const LABEL: Record<Theme, string> = { system: 'System', light: 'Light', dark: 'Dark' };
 const ICON: Record<Theme, LucideIcon> = { system: Monitor, light: Sun, dark: Moon };
 
-/** The choice, as a store React reads: on the server, and in the render that hydrates, nothing is chosen yet, so the
- *  server's HTML and that render agree; then the stored choice. A choice made here tells the readers. */
+/** The choice, as a store React reads, so that every mounted switch (the sidebar's and the mobile drawer's) shows it: on
+ *  the server, and in the render that hydrates, nothing is chosen yet, so the server's HTML and that render agree; then
+ *  the shown choice. A choice made here tells the readers. */
 const readers = new Set<() => void>();
 const subscribe = (reader: () => void) => {
   readers.add(reader);
   return () => void readers.delete(reader);
 };
-const chosen = (): Theme => readTheme();
 const nothingYet = (): null => null;
 
 /**
  * The theme switch in the docs' sidebar: Fumadocs' tray of icon buttons, offering System, Light and Dark as the cloud's
- * account menu does. The choice is the design system's (@yukibana/design/theme), shared with the cloud; the boot script in root.tsx applied it before the page painted, and this only reads it back.
+ * account menu does. The choice is the design system's (@yukibana/design/theme), shared with the cloud. Requires: the
+ * boot script in root.tsx ran, which showed the choice before the page painted; this only reads it back.
  */
 export function ThemeSwitch({ className }: { className?: string }) {
-  const theme = useSyncExternalStore(subscribe, chosen, nothingYet);
+  const theme = useSyncExternalStore(subscribe, readTheme, nothingYet);
 
   function choose(next: Theme) {
-    const change = () => {
-      writeTheme(next);
-      applyTheme(next);
-      flushSync(() => readers.forEach((read) => read()));
-    };
-    if (document.startViewTransition) document.startViewTransition(change);
-    else change();
+    chooseTheme(next);
+    readers.forEach((read) => read());
   }
 
   return (

@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@react-router/node": "^8.5.1",
-    "@yukibana/design": "github:tothambrus11/Yukibana#5f4f5f4f709b9be61bcb1a2ca34a9cc733f26008&path:packages/design",
+    "@yukibana/design": "github:tothambrus11/Yukibana#99cdf1d707ba31a8b6e4122c18142a4d9a87bf0a&path:packages/design",
     "cn": "^0.5.2",
     "fumadocs-core": "16.18.4",
     "fumadocs-mdx": "15.5.3",

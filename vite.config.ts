@@ -8,4 +8,6 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
   },
+  // The design system ships its theme module as TypeScript, which Node will not run from node_modules: bundle it.
+  ssr: { noExternal: ['@yukibana/design'] },
 });

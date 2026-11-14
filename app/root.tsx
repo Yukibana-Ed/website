@@ -1,16 +1,10 @@
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 import { RootProvider } from 'fumadocs-ui/provider/react-router';
-import { themeBoot } from '@yukibana/design/theme';
+import { THEME_BOOT } from '@yukibana/design/theme';
 import type { Route } from './+types/root';
 import './app.css';
 import NotFound from './routes/not-found';
 import StaticSearchDialog from './components/search';
-
-/**
- * The theme chosen in the docs' sidebar, applied before anything paints so a page never flashes the other scheme. It
- * is the design system's (@yukibana/design/theme), shared with the cloud, and sets data-theme on <html>.
- */
-const bootScript = themeBoot();
 
 export const links: Route.LinksFunction = () => [{ rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' }];
 
@@ -21,9 +15,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="color-scheme" content="light dark" />
-        <meta name="theme-color" content="#f5f7fa" media="(prefers-color-scheme: light)" />
-        <meta name="theme-color" content="#0b0e15" media="(prefers-color-scheme: dark)" />
-        <script dangerouslySetInnerHTML={{ __html: bootScript }} />
+        {/* The theme chosen in the docs' sidebar, shared with the cloud, shown before anything paints so a page never
+            flashes the other scheme. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         <Meta />
         <Links />
       </head>
