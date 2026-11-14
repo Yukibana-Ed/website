@@ -346,3 +346,26 @@ html > body[data-scroll-locked] {
   margin-top: 2px;
   padding-top: 10px;
 }
+
+/* The install dialog (components/downloads.tsx), which opens as an installer's download starts: a modal on the
+   surface, centred, as wide as its steps read well and never wider than the window less its gutters, with the page
+   behind it dimmed. */
+.yk-install-dialog {
+  width: min(560px, calc(100% - 32px));
+  max-height: calc(100% - 32px);
+  margin: auto;
+  padding: 0;
+  overflow-y: auto;
+  border: 1px solid var(--yk-line);
+  border-radius: var(--yk-radius-xl);
+  background: var(--yk-surface);
+  color: var(--yk-ink);
+  text-align: start;
+  box-shadow: 0 24px 64px -24px light-dark(color-mix(in oklch, var(--yk-ink) 45%, transparent), #000);
+}
+.yk-install-dialog::backdrop {
+  background: color-mix(in oklch, black 45%, transparent);
+}
+.yk-install-dialog code {
+  font-size: 0.9em;
+}

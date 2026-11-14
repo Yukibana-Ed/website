@@ -1,9 +1,14 @@
+import { Link } from 'react-router';
 import { ArrowRight, Download } from 'lucide-react';
-import { lightUrl, releasesUrl } from '@/lib/shared';
+import { DownloadLink, installPage, useInstallDialog } from './downloads';
+import { installers } from '@/lib/ide-release';
+import { lightUrl } from '@/lib/shared';
+import { useDetectedInstaller, useIdeRelease } from '@/lib/use-ide-release';
 
 /**
  * The landing hero, "Designed in a card": a rounded panel under the header, exactly as wide as the lifted header, with
- * the lattice toward its edges, the logo, the heading, the lead and the two buttons.
+ * the lattice toward its edges, the logo, the heading, the lead and the two buttons. The download button is the
+ * installer for the visitor's system, and a line under it names that installer and links to the others.
  */
 export function Hero() {
   return (
@@ -18,18 +23,61 @@ export function Hero() {
             single zip file.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-[10px]">
-            <a href={releasesUrl} className="yk-btn yk-btn--primary px-[17px] py-[9px] text-[14.5px]">
-              <Download className="size-4" strokeWidth={1.75} aria-hidden />
-              Download
-            </a>
+            <HeroDownload />
             <a href={lightUrl} className="yk-btn yk-btn--secondary px-[17px] py-[9px] text-[14.5px]">
               Try Light in your browser
               <ArrowRight className="size-4" strokeWidth={1.75} aria-hidden />
             </a>
           </div>
+          <HeroDownloadNote />
         </div>
       </div>
     </section>
+  );
+}
+
+const heroButton = 'yk-btn yk-btn--primary px-[17px] py-[9px] text-[14.5px]';
+
+/**
+ * The installer for this computer, as a direct download that opens the install steps. Before the page knows the
+ * computer (the prerendered page, or no JavaScript) and where Yukibana does not run (a phone), the install page.
+ */
+function HeroDownload() {
+  const release = useIdeRelease();
+  const kind = useDetectedInstaller();
+  const { open, dialog } = useInstallDialog(release);
+  const icon = <Download className="size-4" strokeWidth={1.75} aria-hidden />;
+  if (!kind) {
+    return (
+      <Link to={installPage} className={heroButton}>
+        {icon}
+        Download
+      </Link>
+    );
+  }
+  return (
+    <>
+      <DownloadLink installer={release.installers[kind]} onDownload={open} className={heroButton}>
+        {icon}
+        Download for {installers[kind].osLabel}
+      </DownloadLink>
+      {dialog}
+    </>
+  );
+}
+
+/** Which installer the download button gives, and the way to the others. */
+function HeroDownloadNote() {
+  const release = useIdeRelease();
+  const kind = useDetectedInstaller();
+  return (
+    <p className="mt-3 text-sm text-(--yk-soft)">
+      Version {release.version}
+      {kind ? ` · ${installers[kind].variant}` : ''} ·{' '}
+      <Link to={installPage} className="text-(--yk-soft) underline">
+        {kind ? 'Other systems' : 'Windows, macOS and Linux'}
+      </Link>
+    </p>
   );
 }
 

@@ -17,7 +17,6 @@ export const gitConfig = {
 
 /** The IDE, the cloud and the CLI. */
 export const mainRepo = 'https://github.com/Yukibana-Ed/Yukibana';
-export const releasesUrl = `${mainRepo}/releases/latest`;
 
 const getContentUrl = createGetUrl(docsContentRoute);
 

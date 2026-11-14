@@ -1,40 +1,39 @@
 ---
 title: Install the IDE
-description: Download Yukibana for Windows, macOS or Linux.
+description: Download Yukibana for Windows, macOS or Linux, and install it.
 ---
 
-Installers for every version are on the
-[GitHub releases page](https://github.com/Yukibana-Ed/Yukibana/releases/latest).
+Download the installer for your computer. Yukibana then shows you how to
+install it.
 
-| Platform | File |
-| --- | --- |
-| Windows (x64) | `YukibanaSetup-<version>.exe` |
-| macOS, Apple silicon | `Yukibana-arm64-<version>.dmg` |
-| macOS, Intel | `Yukibana-x64-<version>.dmg` |
-| Linux (x64) | `Yukibana-<version>.AppImage` |
+<Downloads />
 
-<Tabs items={["Windows", "macOS", "Linux"]}>
+On a Mac, the Apple silicon build is for Macs with an M1 chip or later, the
+Intel build for older Macs. If you are not sure, open the Apple menu › **About This Mac**: it says **Chip** on Apple
+silicon and **Processor** on Intel.
+
+On Linux, the AppImage runs on any distribution and updates itself; the `.deb`
+is for Debian, Ubuntu and the distributions based on them, which update it
+like any other package.
+
+## Installing
+
+<Tabs items={["Windows", "macOS", "Linux (AppImage)", "Linux (.deb)"]}>
   <Tab value="Windows">
-    Run `YukibanaSetup-<version>.exe` and follow the installer. Yukibana then
-    appears in the Start menu, and opens the `yukibana://` links the cloud uses
-    to open exercises.
+    <InstallSteps kind="windows" />
   </Tab>
   <Tab value="macOS">
-    Open the `.dmg` that matches your Mac (Apple silicon or Intel) and drag
-    Yukibana into Applications.
+    <InstallSteps kind="mac-arm64" />
   </Tab>
-  <Tab value="Linux">
-    Make the AppImage executable and run it:
-
-    ```bash
-    chmod +x Yukibana-*.AppImage
-    ./Yukibana-*.AppImage
-    ```
-
-    Yukibana can create a desktop entry and a `yukibana` command for itself, so
-    that `yukibana://` links from the browser open in the IDE.
+  <Tab value="Linux (AppImage)">
+    <InstallSteps kind="linux-appimage" />
+  </Tab>
+  <Tab value="Linux (.deb)">
+    <InstallSteps kind="linux-deb" />
   </Tab>
 </Tabs>
+
+Once Yukibana is installed, [open your first exercise](/docs/getting-started/students).
 
 ## Languages
 

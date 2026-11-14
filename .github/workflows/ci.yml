@@ -37,7 +37,10 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
+      # The build reads the newest IDE release from GitHub's API (vite.config.ts); the token lifts its hourly limit.
       - run: pnpm build
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       - uses: actions/upload-artifact@v4
         with:
           name: site

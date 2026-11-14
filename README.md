@@ -17,6 +17,12 @@ pnpm dev            # http://localhost:5173
 Pages are MDX in `content/docs/`. Each folder's `meta.json` orders its pages, and `content/docs/meta.json` the sidebar.
 The landing page is `app/routes/home.tsx`.
 
+The download buttons (`app/components/downloads.tsx`) link straight to the installers of the newest IDE release, the
+newest GitHub release of the Yukibana repository tagged `ide-vX.Y.Z`. The build reads it from GitHub's API, so
+`pnpm dev` and `pnpm build` need the network (set `GITHUB_TOKEN` if the API's limit of 60 requests an hour runs out),
+and each page asks again when it opens, so a new release shows up without a deploy. The installers' file names are in
+`app/lib/ide-release.ts`; if the IDE's `electron-builder.yml` renames them, the build fails until they match again.
+
 The look is Yukibana's design system (see [Design system](#design-system)); `app/app.css` maps Fumadocs' colours
 onto it.
 
