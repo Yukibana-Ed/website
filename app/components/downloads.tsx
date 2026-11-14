@@ -1,16 +1,11 @@
-import { useRef, useState, type ReactNode } from 'react';
+import { useId, useRef, useState, type ReactNode } from 'react';
+import { flushSync } from 'react-dom';
 import { Link } from 'react-router';
 import { Download, X } from 'lucide-react';
 import { CodeBlock } from './code-block';
-import {
-  formatSize,
-  installerKinds,
-  installers,
-  type IdeRelease,
-  type Installer,
-  type InstallerKind,
-} from '@/lib/ide-release';
-import { useDetectedInstaller, useIdeRelease } from '@/lib/use-ide-release';
+import release from 'virtual:ide-release';
+import { formatSize, installerKinds, installers, type Installer, type InstallerKind } from '@/lib/ide-release';
+import { useDetectedInstaller } from '@/lib/detect-installer';
 
 /** The docs page with every installer and how to install each. */
 export const installPage = '/docs/getting-started/install';
@@ -20,11 +15,16 @@ export const installPage = '/docs/getting-started/install';
  * the visitor reads them while the file arrives. The page behind it is dimmed; Escape, Close and a click outside it
  * close it.
  */
-export function useInstallDialog(release: IdeRelease): { open: (kind: InstallerKind) => void; dialog: ReactNode } {
+export function useInstallDialog(): { open: (kind: InstallerKind) => void; dialog: ReactNode } {
   const ref = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
   const [kind, setKind] = useState<InstallerKind>();
+  // Whether the press that ends in a click began on the backdrop: selecting a command and letting go outside the
+  // dialog also clicks the dialog itself, and must not close it.
+  const pressedOutside = useRef(false);
   const open = (k: InstallerKind) => {
-    setKind(k);
+    // Rendered before it opens, so that it opens with its title and focus lands in its content.
+    flushSync(() => setKind(k));
     if (!ref.current?.open) ref.current?.showModal();
   };
   const installer = kind && release.installers[kind];
@@ -33,14 +33,15 @@ export function useInstallDialog(release: IdeRelease): { open: (kind: InstallerK
     <dialog
       ref={ref}
       className="yk-install-dialog"
-      aria-labelledby="install-dialog-title"
-      // A click on the backdrop lands on the dialog itself, never on its content.
-      onClick={(event) => event.target === ref.current && ref.current.close()}
+      aria-labelledby={titleId}
+      // A press on the backdrop lands on the dialog itself, never on its content.
+      onPointerDown={(event) => (pressedOutside.current = event.target === ref.current)}
+      onClick={(event) => pressedOutside.current && event.target === ref.current && ref.current.close()}
     >
       {installer && info && (
         <div className="p-6">
           <div className="mb-1 flex items-start justify-between gap-4">
-            <h2 id="install-dialog-title" className="text-(length:--yk-font-size-xl)">
+            <h2 id={titleId} className="text-(length:--yk-font-size-xl)">
               Install Yukibana on {info.osLabel}
             </h2>
             <form method="dialog">
@@ -85,7 +86,7 @@ export function DownloadLink({
   children: ReactNode;
 }) {
   return (
-    <a href={installer.url} download className={className} onClick={() => onDownload(installer.kind)}>
+    <a href={installer.url} className={className} onClick={() => onDownload(installer.kind)}>
       {children}
     </a>
   );
@@ -96,9 +97,8 @@ export function DownloadLink({
  * install page (`<Downloads />` in MDX).
  */
 export function Downloads() {
-  const release = useIdeRelease();
   const detected = useDetectedInstaller();
-  const { open, dialog } = useInstallDialog(release);
+  const { open, dialog } = useInstallDialog();
   return (
     <div className="not-prose my-6">
       <div className="grid gap-3 sm:grid-cols-2">
@@ -158,26 +158,29 @@ function Command({ children }: { children: string }) {
  * (`<InstallSteps kind="…" />` in MDX) show it, so the two never disagree.
  */
 export function InstallSteps({ kind }: { kind: InstallerKind }) {
-  const { name } = useIdeRelease().installers[kind];
+  const { name } = release.installers[kind];
   const file = <code>{name}</code>;
   const steps: ReactNode[] = {
     windows: [
-      <>Run {file}. It installs Yukibana for your account only, with no administrator prompt, and opens it.</>,
       <>
-        If Windows says <q>Windows protected your PC</q>, click <b>More info</b>, then <b>Run anyway</b>. The installer
-        is not signed yet, so Windows does not know it.
+        The installer is not signed yet, so Windows does not know it. If Edge says it <q>isn’t commonly downloaded</q>,
+        choose <b>…</b> › <b>Keep</b>, then <b>Show more</b> › <b>Keep anyway</b>.
+      </>,
+      <>
+        Run {file}. If Windows says <q>Windows protected your PC</q>, click <b>More info</b>, then <b>Run anyway</b>. It
+        installs Yukibana for your account only, with no administrator prompt, and opens it.
       </>,
       <>
         Yukibana is now in the Start menu, and opens the <code>yukibana://</code> links the cloud uses to open
         exercises.
       </>,
     ],
-    'mac-arm64': macSteps(file),
-    'mac-x64': macSteps(file),
+    'mac-arm64': macSteps,
+    'mac-x64': macSteps,
     'linux-appimage': [
       <>
         Make the AppImage executable and run it:
-        <Command>{`chmod +x ${name}\n./${name}`}</Command>
+        <Command>{`cd ~/Downloads\nchmod +x ${name}\n./${name}`}</Command>
       </>,
       <>
         If it does not start and mentions FUSE, install FUSE 2: <code>sudo apt install libfuse2t64</code> on Ubuntu
@@ -191,7 +194,7 @@ export function InstallSteps({ kind }: { kind: InstallerKind }) {
     'linux-deb': [
       <>
         Install the package on Debian, Ubuntu or a distribution based on them:
-        <Command>{`sudo apt install ./${name}`}</Command>
+        <Command>{`cd ~/Downloads\nsudo apt install ./${name}`}</Command>
       </>,
       <>
         Start Yukibana from your applications menu, or with <code>yukibana</code> in a terminal.
@@ -207,19 +210,18 @@ export function InstallSteps({ kind }: { kind: InstallerKind }) {
   );
 }
 
-function macSteps(file: ReactNode): ReactNode[] {
-  return [
-    <>
-      Open {file} and drag Yukibana into <b>Applications</b>.
-    </>,
-    <>
-      Open Yukibana from Applications. It is not notarized by Apple yet, so the first time macOS refuses to open it:
-      click <b>Done</b>, go to <b>System Settings</b> › <b>Privacy &amp; Security</b>, and click <b>Open Anyway</b> next
-      to the message about Yukibana, then confirm. macOS asks only once.
-    </>,
-    <>
-      If macOS says Yukibana <q>is damaged and can’t be opened</q>, remove the download’s quarantine in Terminal:
-      <Command>xattr -dr com.apple.quarantine /Applications/Yukibana.app</Command>
-    </>,
-  ];
-}
+/** The same for both Macs; it names no file, since the install page shows it to Intel and Apple silicon alike. */
+const macSteps: ReactNode[] = [
+  <>
+    Open the <code>.dmg</code> you downloaded and drag Yukibana into <b>Applications</b>.
+  </>,
+  <>
+    Open Yukibana from Applications. It is not notarized by Apple yet, so the first time macOS refuses to open it: click{' '}
+    <b>Done</b>, go to <b>System Settings</b> › <b>Privacy &amp; Security</b>, and click <b>Open Anyway</b> next to the
+    message about Yukibana, then confirm. macOS asks only once.
+  </>,
+  <>
+    If macOS says Yukibana <q>is damaged and can’t be opened</q>, remove the download’s quarantine in Terminal:
+    <Command>xattr -dr com.apple.quarantine /Applications/Yukibana.app</Command>
+  </>,
+];

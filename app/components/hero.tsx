@@ -1,9 +1,10 @@
 import { Link } from 'react-router';
+import release from 'virtual:ide-release';
 import { ArrowRight, Download } from 'lucide-react';
 import { DownloadLink, installPage, useInstallDialog } from './downloads';
 import { installers } from '@/lib/ide-release';
 import { lightUrl } from '@/lib/shared';
-import { useDetectedInstaller, useIdeRelease } from '@/lib/use-ide-release';
+import { useDetectedInstaller } from '@/lib/detect-installer';
 
 /**
  * The landing hero, "Designed in a card": a rounded panel under the header, exactly as wide as the lifted header, with
@@ -43,9 +44,8 @@ const heroButton = 'yk-btn yk-btn--primary px-[17px] py-[9px] text-[14.5px]';
  * computer (the prerendered page, or no JavaScript) and where Yukibana does not run (a phone), the install page.
  */
 function HeroDownload() {
-  const release = useIdeRelease();
   const kind = useDetectedInstaller();
-  const { open, dialog } = useInstallDialog(release);
+  const { open, dialog } = useInstallDialog();
   const icon = <Download className="size-4" strokeWidth={1.75} aria-hidden />;
   if (!kind) {
     return (
@@ -68,7 +68,6 @@ function HeroDownload() {
 
 /** Which installer the download button gives, and the way to the others. */
 function HeroDownloadNote() {
-  const release = useIdeRelease();
   const kind = useDetectedInstaller();
   return (
     <p className="mt-3 text-sm text-(--yk-soft)">

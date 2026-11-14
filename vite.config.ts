@@ -7,8 +7,8 @@ import { ideReleaseOf, releasesApiUrl } from './app/lib/ide-release.ts';
 /**
  * `virtual:ide-release`: the newest IDE release, resolved from GitHub when a build or `pnpm dev` first imports it (not
  * when the config is merely loaded, as `react-router typegen` does) and written into every page, so that the download
- * buttons work without JavaScript. A page looks again when it opens (app/lib/use-ide-release.ts), so a release made
- * after the deploy is offered too. GITHUB_TOKEN, which CI sets, lifts the API's limit of 60 requests an hour that a
+ * buttons work without JavaScript. A new IDE release is offered from the site's next deploy on; until then, the links
+ * go to the previous release's files, which stay. GITHUB_TOKEN, which CI sets, lifts the API's limit of 60 requests an hour that a
  * shared runner's address can have spent. A build that cannot resolve the release fails, rather than ship download
  * buttons that go nowhere.
  */
