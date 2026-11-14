@@ -42,6 +42,21 @@ To take a newer version of the design:
    `pnpm lint` and `pnpm build`.
 4. Commit `package.json` and `pnpm-lock.yaml` together.
 
+## JSON Schemas of yukibana.json
+
+The site serves the JSON Schema of every version of `yukibana.json` and `yukibana.release.json` at
+`https://yukibana.dev/schema/<file>/v<N>.json` (`https://yukibana.dev/schema/yukibana/v1.json` is the `$schema` of a
+version 1 file). They are generated in the Yukibana repository, in `packages/project-schema/schemas/`, and
+`scripts/schemas.mts` fetches them, during `pnpm build`, from the one commit of that repository named by its `COMMIT`.
+A released version is served as immutable, an unreleased one with a five-minute cache, and all of them to any origin
+(`_headers`).
+
+To publish a new version, or a version's release:
+
+1. Change `COMMIT` in `scripts/schemas.mts` to the commit of the Yukibana repository's `main` that has it.
+2. Run `pnpm build` and look at what it prints: every schema it fetched.
+3. Commit, and let CI deploy it.
+
 ## Deploy
 
 CI (`.github/workflows/ci.yml`, GitHub Actions) checks and builds every change. A push to `main` deploys with
