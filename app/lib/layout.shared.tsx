@@ -3,6 +3,7 @@ import type { DocsLayoutProps } from 'fumadocs-ui/layouts/docs';
 import { useDocsLayout } from 'fumadocs-ui/layouts/docs';
 import { Container } from 'fumadocs-ui/layouts/docs/slots/container';
 import { SiteHeader } from '@/components/site-header';
+import { ThemeSwitch } from '@/components/theme-switch';
 
 /**
  * Fumadocs' docs layout with the landing page's site header on top, instead of fumadocs' own header (which it only
@@ -17,6 +18,7 @@ export function docsOptions(): Omit<DocsLayoutProps, 'tree'> {
       navTitle: () => null,
       header: DocsHeader,
       container: DocsContainer,
+      themeSwitch: ThemeSwitch,
     },
   };
 }

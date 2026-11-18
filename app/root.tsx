@@ -1,5 +1,6 @@
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 import { RootProvider } from 'fumadocs-ui/provider/react-router';
+import { THEME_BOOT } from '@yukibana/design/theme';
 import type { Route } from './+types/root';
 import './app.css';
 import NotFound from './routes/not-found';
@@ -13,11 +14,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="color-scheme" content="light dark" />
+        {/* The theme chosen in the docs' sidebar, shared with the cloud, shown before anything paints so a page never
+            flashes the other scheme. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         <Meta />
         <Links />
       </head>
       <body className="flex flex-col min-h-screen">
-        <RootProvider search={{ SearchDialog: StaticSearchDialog }}>{children}</RootProvider>
+        {/* Fumadocs' theme provider is off: the sidebar's switch is our own (components/theme-switch), shared with the
+            cloud. */}
+        <RootProvider search={{ SearchDialog: StaticSearchDialog }} theme={{ enabled: false }}>
+          {children}
+        </RootProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
