@@ -9,18 +9,38 @@ what your role lets you see: the cloud runs every request as you.
 
 ## Install
 
-The CLI lives in the [Yukibana repository](https://github.com/Yukibana-Ed/Yukibana)
-and needs Node.js 24 and pnpm:
+The CLI is the npm package [`@yukibana/cli`](https://www.npmjs.com/package/@yukibana/cli).
+It needs [Node.js](https://nodejs.org) 24 or later. Install it once, globally,
+with the package manager you use:
 
-```bash
-git clone https://github.com/Yukibana-Ed/Yukibana.git
-cd Yukibana
-pnpm setup:cli
-alias yukibana="node $PWD/packages/cli/lib/index.js"
+```npm
+npm install --global @yukibana/cli
 ```
 
-In CI, use the [GitHub Action](/docs/reference/github-action), which builds
-the CLI itself.
+Then check that the `yukibana` command is found:
+
+```bash
+yukibana --help
+```
+
+Running the same install again updates it to the newest release.
+
+<Callout title="If the command is not found">
+  - **pnpm**: run `pnpm setup` once, which puts pnpm's global folder on your
+    `PATH`, then open a new terminal.
+  - **Yarn**: `yarn global` exists only in Yarn 1. With Yarn 2 or later, install
+    with npm or pnpm instead.
+  - **npm** on macOS or Linux: if the install fails with `EACCES`, Node.js was
+    installed system-wide. Install it with a version manager such as
+    [nvm](https://github.com/nvm-sh/nvm) or [fnm](https://github.com/Schniz/fnm)
+    rather than using `sudo`.
+</Callout>
+
+To try a command without installing anything, put `npx @yukibana/cli` (or
+`pnpm dlx @yukibana/cli`) where these pages write `yukibana`.
+
+In CI, use the [GitHub Action](/docs/reference/github-action), which brings
+its own CLI.
 
 ## Logging in
 
