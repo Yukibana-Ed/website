@@ -31,6 +31,15 @@ or after they ever log in. See [Courses and roles](/docs/cloud/courses-and-roles
 </Step>
 <Step>
 
+### Link a GitHub repository
+
+- On the Releases page of your project, create a new repository from a template if you don't already have one.
+- Install the [Yukibana Cloud GitHub App](https://github.com/apps/yukibana-cloud/installations/select_target) on the repository.
+- Select your repository to link on releases page in Yukibana Cloud.
+
+</Step>
+<Step>
+
 ### Describe the exercise in `yukibana.json`
 
 ```json title="yukibana.json"
@@ -44,6 +53,7 @@ or after they ever log in. See [Courses and roles](/docs/cloud/courses-and-roles
   "hidden": ["src/test/scala/hidden"]
 }
 ```
+See the [full reference](/docs/reference/yukibana-json) for more details.
 
 Write the instructions in `ASSIGNMENT.md`: students see it rendered in its own
 panel when the project opens.
@@ -53,36 +63,26 @@ panel when the project opens.
 
 ### Publish a release
 
-From the repository, check what students would receive, then publish:
-
-```bash
-yukibana check .
-yukibana publish . --project <project-id> --url https://cloud.yukibana.dev
-```
-
-Or let the course repository's CI publish on every push with the
-[GitHub Action](/docs/reference/github-action). Either way the CLI builds two
-archives: the **starter** students download, with the hidden tests removed, and
-the **teacher archive**, with everything.
+Push a new tag to the repository, and let the CI handle push the release to Yukibana Cloud.
+Alternatively, you can also publish releases manually from the CLI, or set up releases any time you
+push to the repository (just modify the CI workflow to trigger the action elsewhere).
 
 </Step>
 <Step>
 
 ### Collect and grade
 
-```bash
-yukibana download <project-id> --out grading --assemble
-```
+In the Submissions tab of a project, you will see the list of students who submitted the project.
+You can download individual submissions or all at once, with each student's submission in a separate
+folder.
 
-gives you one folder per student, each holding their newest submission with the
-read-only and hidden files put back from your release, and a report of any
-protected file they changed. See [Submissions and grading](/docs/cloud/submissions).
+Alternatively, you can use the CLI to perform these actions.
 
 </Step>
 </Steps>
 
 <Callout title="One repository, many years">
   A new edition is a copy of the previous one: projects and staff come along,
-  students and dates do not. Reusing an assignment next year is duplicating the
-  edition.
+  students and dates do not. Reusing an assignment next year can be done by duplicating the
+  course edition.
 </Callout>
