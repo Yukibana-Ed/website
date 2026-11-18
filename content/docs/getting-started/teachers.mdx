@@ -67,6 +67,18 @@ Push a new tag to the repository, and let the CI handle push the release to Yuki
 Alternatively, you can also publish releases manually from the CLI, or set up releases any time you
 push to the repository (just modify the CI workflow to trigger the action elsewhere).
 
+To use the CLI, install it once with [Node.js](https://nodejs.org) 24 or later, then log in:
+
+```npm
+npm install --global @yukibana/cli
+```
+
+```bash
+yukibana login --url https://cloud.yukibana.dev
+yukibana check                       # in the course repository: what students will not see
+yukibana publish --project <project-id>
+```
+
 </Step>
 <Step>
 
@@ -76,7 +88,13 @@ In the Submissions tab of a project, you will see the list of students who submi
 You can download individual submissions or all at once, with each student's submission in a separate
 folder.
 
-Alternatively, you can use the CLI to perform these actions.
+Alternatively, you can use the [CLI](/docs/reference/cli) to perform these actions:
+
+```bash
+yukibana download <project-id> --out grading --assemble
+```
+
+See [Submissions and grading](/docs/cloud/submissions#downloading) for the options.
 
 </Step>
 </Steps>
